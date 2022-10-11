@@ -28,13 +28,13 @@ FLUSH PRIVILEGES;
 ```
 Clone the project :
 ```shell
-git clone https://github.com/pluxml/PluXmlNexus
+git clone https://github.com/pluxml/PluXml-Nexus.git
 ```
 Import the `config/initialisation.sql` script to your database.
 
 Install the dependencies :
 ```shell
-composer install
+composer update
 ```
 Copy and edit settings.php
 ```shell

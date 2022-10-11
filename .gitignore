@@ -1,4 +1,5 @@
 /config/settings.php
+/composer.lock
 /vendor/
 /public/datas/tmp/
 /public/datas/plugins/
@@ -7,3 +8,4 @@
 .buildpath
 .project
 .settings/
+
