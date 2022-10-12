@@ -1,17 +1,17 @@
 <div class="grid">
+<?php
+foreach([
+	'homepage' => ['PluXml', 1],
+	'plugins'  => ['Plugins', 3],
+	'themes'   => ['Themes', 2],
+] as $url=>$infos) {
+?>
     <div class="col sml-12 med-4">
-        <div class="tab<?php if ($activeTab == 1): ?> activeTab<?php endif; ?>">
-            <a href="<?= $routerService->urlFor('homepage') ?>">PluXml</a>
+        <div class="tab<?php if ($infos[1] == $activeTab): ?> activeTab<?php endif; ?>">
+            <a href="<?= $routerService->urlFor($url) ?>"><?= $infos[0] ?></a>
         </div>
     </div>
-    <div class="col sml-12 med-4">
-        <div class="tab<?php if ($activeTab == 3): ?> activeTab<?php endif; ?>">
-            <a href="<?= $routerService->urlFor('plugins') ?>">Plugins</a>
-        </div>
-    </div>
-    <div class="col sml-12 med-4">
-        <div class="tab<?php if ($activeTab == 2): ?> activeTab<?php endif; ?>">
-            <a href="<?= $routerService->urlFor('themes') ?>">Themes</a>
-        </div>
-    </div>
+<?php
+}
+?>
 </div>
