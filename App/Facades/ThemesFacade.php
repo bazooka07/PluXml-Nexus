@@ -1,6 +1,6 @@
 <?php
 /**
- * ThemesFacade 
+ * ThemesFacade
  */
 namespace App\Facades;
 
@@ -15,14 +15,18 @@ class ThemesFacade extends Facade
     {
         $themesModel = new ThemesModel($container);
 
-        $datas['title'] = 'Themes Ressources - PluXml.org';
+        # $datas['title'] = 'Themes Ressources - PluXml.org';
+
+        $themes = [];
         foreach ($themesModel->themes as $key => $value) {
-            $themes[$key]['name'] = $value['name'];
-            $themes[$key]['description'] = $value['description'];
-            $themes[$key]['author'] = $value['author'];
-            $themes[$key]['versionTheme'] = $value['versionTheme'];
-            $themes[$key]['versionPluxml'] = $value['versionPluxml'];
-            $themes[$key]['link'] = $value['link'];
+            $themes[$key] = [
+                'name' => $value['name'],
+                'description'=> $value['description'],
+                'author'=> $value['author'],
+                'versionTheme'=> $value['versionTheme'],
+                'versionPluxml'=> $value['versionPluxml'],
+                'link'=> $value['link'],
+            ];
         }
 
         return $themes;

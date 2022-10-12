@@ -23,7 +23,7 @@ Installation
 Create a database and a specific user with the appropriate rights.
 ```sql
 CREATE DATABASE mydatabase;
-GRANT ALL PRIVILEGES ON mydatabase.* TO 'user'@'%' IDENTIFIED BY 'PassWord';
+GRANT ALL PRIVILEGES ON mydatabase TO 'user@localhost' IDENTIFIED BY 'PassWord';
 FLUSH PRIVILEGES;
 ```
 Clone the project :
