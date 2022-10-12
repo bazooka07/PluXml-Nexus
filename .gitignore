@@ -8,5 +8,6 @@
 .buildpath
 .project
 .settings/
-.vscode
+.vscode/
+*.bak
 

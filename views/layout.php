@@ -8,48 +8,36 @@
 <![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?></title>
-    <link rel="apple-touch-icon" sizes="57x57"
-          href="https://medias.pluxml.org/favicon/purple/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60"
-          href="https://medias.pluxml.org/favicon/purple/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72"
-          href="https://medias.pluxml.org/favicon/purple/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76"
-          href="https://medias.pluxml.org/favicon/purple/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114"
-          href="https://medias.pluxml.org/favicon/purple/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120"
-          href="https://medias.pluxml.org/favicon/purple/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144"
-          href="https://medias.pluxml.org/favicon/purple/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152"
-          href="https://medias.pluxml.org/favicon/purple/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180"
-          href="https://medias.pluxml.org/favicon/purple/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192"
-          href="https://medias.pluxml.org/favicon/purple/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32"
-          href="https://medias.pluxml.org/favicon/purple/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96"
-          href="https://medias.pluxml.org/favicon/purple/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16"
-          href="https://medias.pluxml.org/favicon/purple/favicon-16x16.png">
-    <link rel="manifest" href="https://medias.pluxml.org/favicon/purple/manifest.json">
+<?php
+const ICON_URL_BASE = 'https://medias.pluxml.org/favicon/purple/';
+
+foreach([ 57, 60, 72, 76, 114, 120, 144, 152, 180, ] as $size) {
+?>
+    <link rel="apple-touch-icon" href="<?= ICON_URL_BASE?>apple-icon-<?= $size ?>x<?= $size ?>.png" sizes="<?= $size ?>x<?= $size ?>">
+<?php
+}
+?>
+<?php
+foreach([ 16, 32, 96, ] as $size) {
+?>
+    <link rel="icon" href="<?= ICON_URL_BASE ?>favicon-<?= $size ?>x<?= $size ?>.png" sizes="<?= $size ?>x<?= $size ?>" type="image/png">
+<?php
+}
+?>
+    <link rel="icon" type="image/png" sizes="192x192" href="<?= ICON_URL_BASE ?>android-icon-192x192.png">
+    <link rel="manifest" href="<?= ICON_URL_BASE ?>manifest.json">
     <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage"
-          content="https://medias.pluxml.org/favicon/purple/ms-icon-144x144.png">
+    <meta name="msapplication-TileImage" content="<?= ICON_URL_BASE ?>ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
-    <link href="https://www.pluxml.org/assets/plucss-min.css"
-          rel="stylesheet">
-    <link href="https://www.pluxml.org/assets/plx-common-min.css"
-          rel="stylesheet">
-    <link href="/css/styles.css" rel="stylesheet">
-    <link href="/css/fontello/css/fontello.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://www.pluxml.org/assets/plucss-min.css">
+    <link rel="stylesheet" href="https://www.pluxml.org/assets/plx-common-min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/fontello/css/fontello.css">
 </head>
 
 <body>
 
-<div id="plxnav" data-title="Ressources" data-logo="purple" data-link="nexus" style="height: 43px; background-color: #333; border-bottom: 2px solid #cdcdcd;"></div>
+<div id="plxnav" data-title="Ressources" data-logo="purple" data-link="nexus"></div>
 
 <header class="header" role="banner">
     <div class="container">

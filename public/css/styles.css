@@ -142,6 +142,12 @@ footer {
     text-align: center;
 }
 
+#plxnav {
+    height: 43px;
+    background-color: #333;
+    border-bottom: 2px solid #cdcdcd;
+}
+
 @media screen and (max-width: 600px) {
     .page {
         padding: 10px;
