@@ -18,11 +18,11 @@ class PluginsModel extends Model
         parent::__construct($container);
 
         if (!empty($userid)) {
-            $this->plugins = $this->pdoService->query("SELECT * FROM plugins WHERE author='$userid'");
+            $this->plugins = $this->pdoService->query("SELECT * FROM plugins WHERE author='$userid' order by date,name");
         } else if (!empty($categoryId)) {
-            $this->plugins = $this->pdoService->query("SELECT * FROM plugins WHERE category='$categoryId'");
+            $this->plugins = $this->pdoService->query("SELECT * FROM plugins WHERE category='$categoryId' order by date,name");
         } else {
-            $this->plugins = $this->pdoService->query('SELECT * FROM plugins');
+            $this->plugins = $this->pdoService->query('SELECT * FROM plugins order by name');
         }
     }
 }
