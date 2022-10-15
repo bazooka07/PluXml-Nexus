@@ -27,8 +27,10 @@ class NewUserModel extends Model
         parent::__construct($container);
 
         $this->username = $user['username'];
+        $this->userid = $user['userid'];
         $this->password = password_hash($user['password'], PASSWORD_BCRYPT);
         $this->email = $user['email'];
+        $this->website = $user['website'];
 
         $token = parent::generateToken();
         $this->token = $token['token'];
@@ -46,6 +48,6 @@ class NewUserModel extends Model
 
     public function updateUser()
     {
-        return $this->pdoService->insert("UPDATE users SET email = '$this->email', website = '$this->website' WHERE username = '$this->username'");
+        return $this->pdoService->insert("UPDATE users SET email = '$this->email', website = '$this->website' WHERE id = '$this->userid'");
     }
 }

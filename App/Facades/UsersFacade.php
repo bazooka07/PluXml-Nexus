@@ -63,10 +63,13 @@ class UsersFacade
     {
         $userModel = self::searchUser($container, $username);
 
-        $datas['title'] = "Profile $userModel->username Ressources - PluXml.org";
-        $datas['username'] = $userModel->username;
-        $datas['email'] = $userModel->email;
-        $datas['website'] = $userModel->website;
+        $datas = [
+            'title' => "Profile $userModel->username Ressources - PluXml.org",
+            'username' => $userModel->username,
+            'userid' => $userModel->id,
+            'email' => $userModel->email,
+            'website' => $userModel->website,
+        ];
 
         if ($withPlugins) {
             $datas['plugins'] = self::getPluginsByProfile($container, $userModel->id);

@@ -21,6 +21,7 @@
             <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
             <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
             <input type="hidden" name="username" value="<?= $username ?>">
+            <input type="hidden" name="userid" value="<?= $userid ?>">
             <div <?php if (isset($flash['email'][0])): ?>style="color:red"<?php endif; ?>>
                 <label for="email">Email address*: </label>
                 <input type="email" name="email" id="email"

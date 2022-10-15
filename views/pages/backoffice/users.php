@@ -50,7 +50,11 @@
                                 <?php endif; ?>
                             </td>
                             <td>
+<?php if ($profile['role'] !== 'admin'): ?>
                                 <a onclick="confirmModal('<?= $profile['username'] ?>', '<?= $routerService->urlFor('bormuser', ['username' => $profile['username']]) ?>')"><i class="icon-trash"></i></a>
+<?php else: ?>
+    &nbsp;
+<?php endif; ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>
