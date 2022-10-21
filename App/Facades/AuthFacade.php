@@ -24,16 +24,25 @@ class AuthFacade extends Facade
      */
     static public function authentificateUser(ContainerInterface $container, string $username, string $password): bool
     {
-        $result = FALSE;
-        $userModel = UsersFacade::searchUser($container, $username);
-
-        if (!empty($userModel) and !empty($userModel->role) and password_verify($password, $userModel->password)) {
-            $result = TRUE;
+        try{
+            $userModel = new UserModel($container,  $username, $password);
             $_SESSION['user'] = $userModel->username;
+            $_SESSION['userid'] = $userModel->id;
             $_SESSION['role'] = $userModel->role;
+            return TRUE;
+        } catch (Exception $e) {
+            return FALSE;
         }
+    }
 
-        return $result;
+    /**
+     * Logout the user
+     */
+    static public function logout()
+    {
+        unset($_SESSION['user']);
+        unset($_SESSION['userid']);
+        unset($_SESSION['role']);
     }
 
     /**
@@ -43,13 +52,7 @@ class AuthFacade extends Facade
      */
     static public function isLogged(): bool
     {
-        $result = FALSE;
-
-        if (isset($_SESSION['user'])) {
-            $result = TRUE;
-        }
-
-        return $result;
+        return (isset($_SESSION['user']));
     }
 
     /**
@@ -60,24 +63,12 @@ class AuthFacade extends Facade
      */
     static public function isAdmin(ContainerInterface $container, $username): bool
     {
-        $result = FALSE;
-
-        if ($_SESSION['role'] == 'admin') {
-            $userModel = UsersFacade::searchUser($container, $username);
-            if ($userModel->role == 'admin') {
-                $result = TRUE;
-            }
+        if ($_SESSION['role'] !== 'admin') {
+            return FALSE;
         }
 
-        return $result;
-    }
-
-    /**
-     * Logout the user
-     */
-    static public function logout()
-    {
-        unset($_SESSION['user']);
+        $userModel = UsersFacade::searchUser($container, $username);
+        return !empty($userModel) ? $userModel->role == 'admin' : FALSE;
     }
 
     /**
@@ -93,13 +84,20 @@ class AuthFacade extends Facade
         $tokenHref = $container->get('router')->urlFor('confirmEmail') . "?username=$userModel->username&token=$userModel->token";
         $placeholder = [
             '##USERNAME##' => $userModel->username,
-            '##TOKEN##' => '<p><a href="' . $host . $tokenHref . '">' . $host . $tokenHref . '</a></p>'
+            '##HREF##'  => $host,
+            '##LINK##' => $host . $tokenHref,
+            '##HOURS##' => AUTH_SIGNUP_LIFETIME,
         ];
-        $body = str_replace(array_keys($placeholder), array_values($placeholder), MAIL_NEWUSER_BODY);
 
-        $result = $container->get('mail')->sendMail(MAIL_FROM, MAIL_FROM_NAME, $userModel->email, $userModel->username, MAIL_NEWUSER_SUBJECT, $body, TRUE);
-
-        return $result;
+        return $container->get('mail')->sendMail(
+            MAIL_FROM,
+            MAIL_FROM_NAME,
+            $userModel->email,
+            $userModel->username,
+            MAIL_NEWUSER_SUBJECT,
+            strtr(MAIL_NEWUSER_BODY, $placeholder), # body
+            TRUE
+        );
     }
 
     /**
@@ -118,7 +116,7 @@ class AuthFacade extends Facade
             if ($userModel->token == $token and $userModel->tokenExpire >= date('Y-m-d H:i:s')) {
                 $userModel->role = 'user';
                 $userModel->token = NULL;
-                $userModel->tokenExpire = '0000-00-00 00:00:00';
+                $userModel->tokenExpire = NULL;
                 $userModel->editUser();
                 $result = TRUE;
             }
@@ -142,23 +140,29 @@ class AuthFacade extends Facade
             $token = $userModel->generateToken();
             $userModel->token = $token['token'];
             $userModel->tokenExpire = $token['expire'];
-            $result = $userModel->editUser();
+            if ($userModel->editUser()) {
+                $host = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
+                $tokenHref = $container->get('router')->urlFor('resetPassword') . "?token=$userModel->token";
+                $placeholder = [
+                    '##USERNAME##' => $userModel->username,
+                    '##HREF##'  => $host,
+                    '##LINK##' => $host . $tokenHref,
+                    '##HOURS##' => AUTH_SIGNUP_LIFETIME,
+                ];
+
+                return $container->get('mail')->sendMail(
+                    MAIL_FROM,
+                    MAIL_FROM_NAME,
+                    $userModel->email,
+                    $userModel->username,
+                    MAIL_NEWUSER_SUBJECT,
+                    strtr(MAIL_NEWUSER_BODY, $placeholder), # body
+                    TRUE
+                );
+            }
         }
 
-        if ($result) {
-            $host = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
-            $tokenHref = $container->get('router')->urlFor('resetPassword') . "?token=$userModel->token";
-            $placeholder = [
-                '##USERNAME##' => $userModel->username,
-                '##URL_PASSWORD##' => $host . $tokenHref,
-                '##URL_EXPIRY##' => $token['expire']
-            ];
-            $body = str_replace(array_keys($placeholder), array_values($placeholder), MAIL_LOSTPASSWORD);
-
-            $result = $container->get('mail')->sendMail(MAIL_FROM, MAIL_FROM_NAME, $userModel->email, $userModel->username, MAIL_NEWUSER_SUBJECT, $body, TRUE);
-        }
-
-        return $result;
+        return false;
     }
 
     /**

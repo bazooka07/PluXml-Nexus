@@ -7,7 +7,7 @@ foreach([
 ] as $url=>$infos) {
 ?>
     <div class="col sml-12 med-4">
-        <div class="tab<?php if ($infos[1] == $activeTab): ?> activeTab<?php endif; ?>">
+        <div class="tab<?php if (isset($activeTab) and $infos[1] == $activeTab): ?> activeTab<?php endif; ?>">
             <a href="<?= $routerService->urlFor($url) ?>"><?= $infos[0] ?></a>
         </div>
     </div>

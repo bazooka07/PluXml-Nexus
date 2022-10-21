@@ -3,9 +3,11 @@
 namespace App\Facades;
 
 use Psr\Container\ContainerInterface;
+use App\Models\UsersFilter;
 use App\Models\UsersModel;
 use App\Models\UserModel;
 use App\Models\PluginsModel;
+use App\Models\ThemesModel;
 use App\Models\NewUserModel;
 
 /**
@@ -21,20 +23,20 @@ class UsersFacade
      * @param bool $hadPlugins
      * @return array $datas
      */
-    static public function getAllProfiles(ContainerInterface $container, bool $hadPlugins = false): array
+    static public function getAllProfiles(ContainerInterface $container, UsersFilter $filter = UsersFilter::None): array
     {
-        $datas = [];
-        $usersModel = new UsersModel($container, $hadPlugins);
-
-        $datas['profiles'] = $usersModel->users;
-
-        return $datas;
+        $usersModel = new UsersModel($container, $filter);
+        return [
+            'profiles'    => $usersModel->users,
+            'expireCount' => $usersModel->expireCount(),
+        ];
     }
 
-    static public function getAllProfilesWithAndWithoutPlugins(ContainerInterface $container): array
+    static public function getAllProfilesWithItemsCount(ContainerInterface $container): array
     {
-        $datas = UsersFacade::getAllProfiles($container);
+        $datas = UsersFacade::getAllProfiles($container, UsersFilter::ItemsCount);
 
+        /*
         $usersWithPluginsModel = new UsersModel($container, true);
         $usersWithPlugins = $usersWithPluginsModel->users;
 
@@ -49,9 +51,11 @@ class UsersFacade
                 }
             }
         }
+        * */
 
         return $datas;
     }
+
     /**
      *
      * @param ContainerInterface $container
@@ -59,7 +63,7 @@ class UsersFacade
      * @param bool $withPlugins add user's plugins name to the view datas
      * @return array $datas
      */
-    static public function getProfile(ContainerInterface $container, string $username, bool $withPlugins = false): array
+    static public function getProfile(ContainerInterface $container, string $username, bool $asContributor = false): array
     {
         $userModel = self::searchUser($container, $username);
 
@@ -71,9 +75,11 @@ class UsersFacade
             'website' => $userModel->website,
         ];
 
-        if ($withPlugins) {
+        if ($asContributor) {
             $datas['plugins'] = self::getPluginsByProfile($container, $userModel->id);
+            $datas['themes'] = self::getThemesByProfile($container, $userModel->id);
         }
+
         return $datas;
     }
 
@@ -89,17 +95,15 @@ class UsersFacade
         $userModels = new UsersModel($container);
 
         // Search userid by the username
-        foreach ($userModels->users as $k => $v)
-            if (in_array($search, $v)) {
-                $userId = $userModels->users[$k]['id'];
-                break;
-            }
+        $rows = array_filter($userModels->users, function($userInfos) use($search) {
+            return ($userInfos['username'] === $search and empty($userInfos['token']));
+        });
 
-        if (!empty($userId)) {
-            $userModel = new UserModel($container, $userId);
+        if(count($rows) !== 1) {
+            return NULL;
         }
 
-        return $userModel;
+        return new UserModel($container, array_values($rows)[0]['id']);
     }
 
     /**
@@ -131,8 +135,18 @@ class UsersFacade
      */
     static public function removeUser(ContainerInterface $container, string $username): bool
     {
-        $userModel = self::searchUser($container, $username);
         return $userModel->delete();
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param string $username
+     * @return bool
+     */
+    static public function removeExpire(ContainerInterface $container): bool
+    {
+        $usersModel = new UsersModel($container, $hadPlugins);
+        return $usersModel->expire();
     }
 
     /**
@@ -145,5 +159,17 @@ class UsersFacade
     {
         $pluginsModel = new PluginsModel($container, $userid);
         return isset($pluginsModel) ? PluginsFacade::populatePluginsList($container, $pluginsModel) : null;
+    }
+
+    /**
+     *
+     * @param ContainerInterface $container
+     * @param string $userid
+     * @return array|null
+     */
+    static private function getThemesByProfile(ContainerInterface $container, string $userid): ?array
+    {
+        $themesModel = new ThemesModel($container, $userid);
+        return isset($themesModel) ? ThemesFacade::populateThemesList($container, $themesModel) : null;
     }
 }

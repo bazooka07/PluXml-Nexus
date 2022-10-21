@@ -50,7 +50,8 @@ $app->group('/backoffice', function (RouteCollectorProxyInterface $group) {
     $group->get('/theme/add', BackofficeThemesController::class . ':showAddTheme')->setName('boaddtheme');
     $group->get('/profile', BackofficeProfileController::class . ':showEditProfile')->setName('boeditprofile');
     $group->get('/users', BackofficeUsersController::class . ':showUsers')->setName('bousers');
-    $group->get('/users/remove/{username}', BackofficeUsersController::class . ':removeUserId')->setName('bormuser');
+    $group->get('/users/expire', BackofficeUsersController::class . ':removeExpire')->setName('bormusers');
+    $group->get('/users/remove/{userid}', BackofficeUsersController::class . ':removeUserId')->setName('bormuser');
 
     $group->post('/plugin/save', BackofficePluginsController::class . ':save')->setName('pluginSaveAction');
     $group->post('/plugin/edit/{name}', BackofficePluginsController::class . ':edit')->setName('pluginEditAction');

@@ -24,7 +24,7 @@
                 </a>
             </div>
             <div class="col sml-12 med-3 panel text-center">
-                <a style="pointer-events: none;" href="<?= $routerService->urlFor('bothemes') ?>">
+                <a href="<?= $routerService->urlFor('bothemes') ?>">
                     <div class="panel-content">
                         <img src="/img/favicon/favicon-32x32.png" alt="add or edit a theme picto"/>
                         <h3 class="no-margin h4">Themes</h3>

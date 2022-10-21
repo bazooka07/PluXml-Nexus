@@ -9,7 +9,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?></title>
 <?php
-const ICON_URL_BASE = 'https://medias.pluxml.org/favicon/purple/';
+const ICON_URL_BASE = DEBUG ? '/favicon/purple/' : 'https://medias.pluxml.org/favicon/purple/';
+const ASSETS_URL_BASE = DEBUG ? '/assets/' : 'https://www.pluxml.org/assets/';
 
 foreach([ 57, 60, 72, 76, 114, 120, 144, 152, 180, ] as $size) {
 ?>
@@ -29,8 +30,8 @@ foreach([ 16, 32, 96, ] as $size) {
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="<?= ICON_URL_BASE ?>ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
-    <link rel="stylesheet" href="https://www.pluxml.org/assets/plucss-min.css">
-    <link rel="stylesheet" href="https://www.pluxml.org/assets/plx-common-min.css">
+    <link rel="stylesheet" href="<?= ASSETS_URL_BASE ?>plucss-min.css">
+    <link rel="stylesheet" href="<?= ASSETS_URL_BASE ?>plx-common-min.css">
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/fontello/css/fontello.css">
 </head>

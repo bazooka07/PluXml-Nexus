@@ -31,4 +31,5 @@ require_once '../config/middlewares.php';
 require_once '../config/routes.php';
 
 // SLIM4 application launching
+const PUBLIC_DIR = __DIR__;
 $app->run();

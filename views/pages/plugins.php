@@ -3,7 +3,6 @@
 
     <div class="page grid">
         <?php include 'tags/pluginsCategories.php'; ?>
-
         <?php if (!empty($plugins)): ?>
             <?php include 'tags/pluginsList.php'; ?>
         <?php else: ?>

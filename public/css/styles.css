@@ -59,6 +59,10 @@ h1 {
     background-color: var(--backtab);
 }
 
+.categories .tab {
+  font-weight: initial;
+}
+
 .content .tab:hover {
     background-color: var(--backbuttonhover);
 }

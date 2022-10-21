@@ -3,9 +3,11 @@
 namespace App\Controllers;
 
 use App\Facades\CategoriesFacade;
+use App\Controllers\BackofficeController;
 use Exception;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Container\ContainerInterface;
 use App\Facades\PluginsFacade;
 use Respect\Validation\Validator;
 
@@ -13,41 +15,35 @@ use Respect\Validation\Validator;
  * Class BackofficePluginsController
  * @package App\Controllers
  */
-class BackofficePluginsController extends Controller
+class BackofficePluginsController extends BackOfficeController
 {
 
     private const NAMED_ROUTE_BOPLUGINS = 'boplugins';
 
     private const NAMED_ROUTE_SAVEPLUGIN = 'boaddplugin';
 
-    private const MSG_VALID_NAME = 'Must be alphanumeric with no whitespace';
-
-    private const MSG_VALID_TOLONG1000 = 'Invalid or to long (1000 characters max)';
-
-    private const MSG_VALID_TOLONG100 = 'Invalid or to long (100 characters max)';
-
-    private const MSG_VALID_FILE = 'Invalid file (extension must be zip and size inferior to 10MB';
-
-    private const MSG_SUCCESS_EDITPLUGIN = 'Plugin saved with success';
-
-    private const MSG_SUCCESS_DELETEPLUGIN = 'Plugin deleted with success';
-
-    private const MSG_ERROR_TECHNICAL_PLUGINS = 'Technical error or plugin name already exist';
+    public function __construct(ContainerInterface $container)
+    {
+        parent::__construct($container);
+        $this->ressourceType = 'plugin';
+        $this->dirTarget = PUBLIC_DIR . DIR_PLUGINS;
+    }
 
     /**
      *
      * @param Request $request
      * @param Response $response
-     * @return Response
+     * @return ResponseInterface Response
      */
-    public function show(Request $request, Response $response)
+    public function show(Request $request, Response $response) : Response
     {
-        $datas['title'] = 'Backoffice Ressources - PluXml.org';
-        $datas['h2'] = 'Backoffice';
-        $datas['h3'] = 'Plugins';
-        $datas['plugins'] = PluginsFacade::getAllPlugins($this->container, $this->currentUser);
-
-        return $this->render($response, 'pages/backoffice/plugins.php', $datas);
+        return $this->render($response,
+            'pages/backoffice/plugins.php', # view
+            [
+                'h3' => 'Plugins',
+                'plugins' => PluginsFacade::getAllPlugins($this->container, $this->currentUser),
+            ]
+        );
     }
 
     /**
@@ -59,13 +55,15 @@ class BackofficePluginsController extends Controller
      */
     public function showPlugin(Request $request, Response $response, array $args): Response
     {
-        $datas['title'] = 'Backoffice Ressources - PluXml.org';
-        $datas['h2'] = 'Backoffice';
-        $datas['h3'] = 'Edit plugin ' . $args['name'];
-        $datas['plugin'] = PluginsFacade::getPlugin($this->container, $args['name']);
-        $datas['categories'] = CategoriesFacade::getCategories($this->container);
 
-        return $this->render($response, 'pages/backoffice/editPlugin.php', $datas);
+        return $this->render($response,
+            'pages/backoffice/editPlugin.php',
+            [
+                'h3' => 'Edit plugin ' . $args['name'],
+                'plugin' => PluginsFacade::getPlugin($this->container, $args['name']),
+                'categories' => CategoriesFacade::getCategories($this->container),
+            ]
+        );
     }
 
     /**
@@ -76,12 +74,13 @@ class BackofficePluginsController extends Controller
      */
     public function showAddPlugin(Request $request, Response $response): Response
     {
-        $datas['title'] = 'Backoffice Ressources - PluXml.org';
-        $datas['h2'] = 'Backoffice';
-        $datas['h3'] = 'New plugin';
-        $datas['categories'] = CategoriesFacade::getCategories($this->container);
-
-        return $this->render($response, 'pages/backoffice/addPlugin.php', $datas);
+        return $this->render($response,
+            'pages/backoffice/addPlugin.php',
+            [
+                'h3' => 'New plugin',
+                'categories' => CategoriesFacade::getCategories($this->container),
+            ]
+        );
     }
 
     /**
@@ -94,34 +93,28 @@ class BackofficePluginsController extends Controller
      */
     public function edit(Request $request, Response $response, array $args): Response
     {
-        $dirPlugins = $_SERVER['DOCUMENT_ROOT'] . DIR_PLUGINS;
-        $dirTmpPlugin = $_SERVER['DOCUMENT_ROOT'] . DIR_TMP;
-
         $post = $request->getParsedBody();
 
-        if (isset($post['file'])) {
-            $errors = self::pluginValidator($request, false, true);
-        } else {
-            $errors = self::pluginValidator($request);
-        }
+        $errors = self::ressourceValidator($request, false, isset($post['file']));
 
         if (empty($errors)) {
             if (PluginsFacade::editPlugin($this->container, $post)) {
                 $result = true;
                 if (isset($post['file'])) {
                     $filename = $post['name'] . '.zip';
-                    $result = rename($dirTmpPlugin . DIRECTORY_SEPARATOR . $filename, $dirPlugins . DIRECTORY_SEPARATOR . $filename);
+                    $dirTmp = PUBLIC_DIR . DIR_TMP;
+                    $result = rename($dirTmp . DIRECTORY_SEPARATOR . $filename, $this->dirTarget . DIRECTORY_SEPARATOR . $filename);
                 }
                 if ($result) {
-                    $this->messageService->addMessage('success', self::MSG_SUCCESS_EDITPLUGIN);
+                    $this->messageService->addMessage('success', sprintf(self::MSG_SUCCESS_EDITRESSOURCE, $this->ressourceType));
                 } else {
-                    $errors['error'] = self::MSG_ERROR_TECHNICAL_PLUGINS;
+                    $errors['error'] = sprintf(self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType);
                 }
             } else {
-                $this->messageService->addMessage('error', self::MSG_ERROR_TECHNICAL);
+                $this->messageService->addMessage('error', self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType);
             }
         } else {
-            $this->messageService->addMessage('error', self::MSG_ERROR_TECHNICAL);
+            $this->messageService->addMessage('error', self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType);
             foreach ($errors as $key => $message) {
                 $this->messageService->addMessage($key, $message);
             }
@@ -139,35 +132,34 @@ class BackofficePluginsController extends Controller
      */
     public function save(Request $request, Response $response): Response
     {
-        $namedRoute = self::NAMED_ROUTE_BOPLUGINS;
-        $dirPlugins = $_SERVER['DOCUMENT_ROOT'] . DIR_PLUGINS;
-        $dirTmpPlugin = $_SERVER['DOCUMENT_ROOT'] . DIR_TMP;
-
         $post = $request->getParsedBody();
-        $errors = self::pluginValidator($request, true);
+        $errors = self::ressourceValidator($request, true);
 
         // Validator error and plugin does not exist
         if (empty($errors) && empty(PluginsFacade::getPlugin($this->container, $post['name']))) {
             if (PluginsFacade::savePlugin($this->container, $post)) {
                 $filename = $post['name'] . '.zip';
-                if (!file_exists($dirPlugins . DIRECTORY_SEPARATOR . $filename)) {
-                    $result = rename($dirTmpPlugin . DIRECTORY_SEPARATOR . $filename, $dirPlugins . DIRECTORY_SEPARATOR . $filename);
+                $dirTmp = PUBLIC_DIR . DIR_TMP;
+                if (!file_exists($this->dirTarget . DIRECTORY_SEPARATOR . $filename)) {
+                    $result = rename($dirTmp . DIRECTORY_SEPARATOR . $filename, $dirTarget . DIRECTORY_SEPARATOR . $filename);
                     if ($result) {
-                        $this->messageService->addMessage('success', self::MSG_SUCCESS_EDITPLUGIN);
+                        $this->messageService->addMessage('success', sprintf(self::MSG_SUCCESS_EDITRESSOURCE, $this->ressourceType));
                     } else {
-                        $errors['error'] = self::MSG_ERROR_TECHNICAL_PLUGINS;
+                        $errors['error'] = sprintf(self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType);
                     }
                 } else {
-                    $errors['error'] = self::MSG_ERROR_TECHNICAL_PLUGINS;
+                    $errors['error'] = sprintf(self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType);
                 }
             } else {
-                $errors['error'] = self::MSG_ERROR_TECHNICAL_PLUGINS;
+                $errors['error'] = sprintf(self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType);
             }
         } else {
-            $errors['error'] = self::MSG_ERROR_TECHNICAL_PLUGINS;
+            $errors['error'] = sprintf(self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType);
         }
 
-        if (!empty($errors)) {
+        if (empty($errors)) {
+            $namedRoute = self::NAMED_ROUTE_BOPLUGINS;
+        } else {
             foreach ($errors as $key => $message) {
                 $this->messageService->addMessage($key, $message);
             }
@@ -186,70 +178,13 @@ class BackofficePluginsController extends Controller
      */
     public function delete(Request $request, Response $response, array $args): Response
     {
-        $namedRoute = self::NAMED_ROUTE_BOPLUGINS;
-
         if (PluginsFacade::deletePlugin($this->container, $args['name'])) {
-            $this->messageService->addMessage('success', self::MSG_SUCCESS_DELETEPLUGIN);
+            $this->messageService->addMessage('success', sprintf(self::MSG_SUCCESS_DELETERESSOURCE, $this->ressourceType));
         } else {
-            $this->messageService->addMessage('error', self::MSG_ERROR_TECHNICAL);
+            $this->messageService->addMessage('error', sprintf(self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType));
         }
 
-        return $this->redirect($response, $namedRoute);
+        return $this->redirect($response, self::NAMED_ROUTE_BOPLUGINS);
     }
 
-    /**
-     * Validate request body for a plugin save or edit
-     *
-     * @param Request $request
-     * @param bool $newPlugin
-     * @param bool $newFile
-     * @return array
-     * @throws Exception
-     */
-    private function pluginValidator(Request $request, bool $newPlugin = false, bool $newFile = false): array
-    {
-        $errors = [];
-        $post = $request->getParsedBody();
-        $dirTmpPlugin = $_SERVER['DOCUMENT_ROOT'] . DIR_TMP;
-        $uploadedFiles = $request->getUploadedFiles();
-        if (empty($uploadedFiles['file'])) {
-            throw new Exception('No file has been send');
-        }
-
-        if (!empty($post['description'])) {
-            Validator::alnum('. , - _')->length(1, 999)->validate($post['description']) || $errors['description'] = self::MSG_VALID_TOLONG1000;
-        }
-        if (!empty($post['versionPlugin'])) {
-            Validator::alnum('. , - _')->length(1, 99)->validate($post['versionPlugin']) || $errors['versionPlugin'] = self::MSG_VALID_TOLONG100;
-        }
-        if (!empty($post['versionPluxml'])) {
-            Validator::alnum('.')->length(1, 99)->validate($post['versionPluxml']) || $errors['versionPluxml'] = self::MSG_VALID_TOLONG100;
-        }
-        if (!empty($post['link'])) {
-            Validator::url()->length(1, 99)->validate($post['link']) || $errors['link'] = self::MSG_VALID_URL;
-        }
-
-        if ($newPlugin) {
-            Validator::notEmpty()->alnum()
-                ->noWhitespace()
-                ->length(1, 99)
-                ->validate($post['name']) || $errors['name'] = self::MSG_VALID_NAME;
-        }
-
-        if ($newPlugin || $newFile) {
-            // Uploaded file move, rename and validation
-            $uploadedFile = $uploadedFiles['file'];
-            if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
-                $filename = $post['name'] . '.zip';
-                $uploadedFile->moveTo($dirTmpPlugin . DIRECTORY_SEPARATOR . $filename);
-                Validator::notEmpty()->extension('zip')
-                    ->size(NULL, PLUGINS_MAX_SIZE)
-                    ->validate($dirTmpPlugin . DIRECTORY_SEPARATOR . $filename) || $errors['file'] = self::MSG_VALID_FILE;
-            } else {
-                $errors['error'] = self::MSG_ERROR_TECHNICAL_PLUGINS;
-            }
-        }
-
-        return $errors;
-    }
 }

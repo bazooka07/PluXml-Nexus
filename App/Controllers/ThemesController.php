@@ -19,9 +19,13 @@ class ThemesController extends Controller
      */
     public function show(Request $request, Response $response)
     {
-        $datas['activeTab'] = 2;
-        $datas['themes'] = ThemesFacade::getAllThemes($this->container);
-        return $this->render($response, 'pages/themes.php', $datas);
+        return $this->render($response, 
+            'pages/themes.php',
+            [
+                'activeTab' => 2,
+                'themes' => ThemesFacade::getAllThemes($this->container),
+            ]
+        );
     }
 
     /**
@@ -33,7 +37,9 @@ class ThemesController extends Controller
      */
     public function showTheme(Request $request, Response $response, $args)
     {
-        $datas = ThemesFacade::getTheme($this->container, $args['name']);
-        return $this->render($response, 'pages/theme.php', $datas);
+        return $this->render($response,
+            'pages/theme.php',
+            ThemesFacade::getTheme($this->container, $args['name'])
+        );
     }
 }

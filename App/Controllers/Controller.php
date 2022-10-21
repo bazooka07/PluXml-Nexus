@@ -28,8 +28,6 @@ class Controller
 
     protected const NAMED_ROUTE_BACKOFFICE = 'backoffice';
 
-    protected const VIEW_BO_USERS = 'pages/backoffice/backoffice.php';
-
     protected const MSG_VALID_EMAIL = 'Invalid email address';
 
     protected const MSG_VALID_URL = 'Invalid url';
@@ -74,7 +72,9 @@ class Controller
     public function render(Response $response, $filename, $datas = [])
     {
         $datas['flash'] = $this->messageService->getMessages();
-        $datas['title'] = 'Plugins Ressources - PluXml.org';
+        if (empty($datas['title'])) {
+            $datas['title'] = 'Ressources - PluXml.org';
+        }
         return $this->viewService->render($response, $filename, $datas);
     }
 }

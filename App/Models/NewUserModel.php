@@ -28,7 +28,7 @@ class NewUserModel extends Model
 
         $this->username = $user['username'];
         $this->userid = $user['userid'];
-        $this->password = password_hash($user['password'], PASSWORD_BCRYPT);
+        $this->password = self::encryptPassword($user['password']);
         $this->email = $user['email'];
         $this->website = $user['website'];
 

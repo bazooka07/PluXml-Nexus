@@ -22,8 +22,9 @@
                         <th>Username</th>
                         <th>Email</th>
                         <th>Website</th>
-                        <th>Had plugins</th>
-                        <th>Validated</th>
+                        <th>Plugins</th>
+                        <th>Themes</th>
+                        <th>Validate before</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -35,25 +36,14 @@
                             </td>
                             <td><?= $profile['email'] ?></td>
                             <td><?= $profile['website'] ?></td>
-                            <td>
-                                <?php if ($profile['hadPlugins']): ?>
-                                    Yes
-                                <?php else: ?>
-                                    No
-                                <?php endif; ?>
-                            </td>
-                            <td>
-                                <?php if($profile['tokenexpire'] == '0000-00-00 00:00:00'): ?>
-                                    Yes
-                                <?php else: ?>
-                                    No (<?= $profile['tokenexpire'] ?>)
-                                <?php endif; ?>
-                            </td>
+                            <td><?= $profile['plugins_cnt'] ?></td>
+                            <td><?= $profile['themes_cnt'] ?></td>
+                            <td><?= !empty($profile['token']) ? $profile['tokenexpire']: '&nbsp;' ?></td>
                             <td>
 <?php if ($profile['role'] !== 'admin'): ?>
-                                <a onclick="confirmModal('<?= $profile['username'] ?>', '<?= $routerService->urlFor('bormuser', ['username' => $profile['username']]) ?>')"><i class="icon-trash"></i></a>
+                                <a onclick="confirmModal('<?= $profile['username'] ?>', '<?= $routerService->urlFor('bormuser', ['userid' => $profile['id']]) ?>', 'user')"><i class="icon-trash"></i></a>
 <?php else: ?>
-    &nbsp;
+    admin
 <?php endif; ?>
                             </td>
                         </tr>
@@ -66,5 +56,4 @@
         </div>
     </div>
 </div>
-
 <script src="/js/confirmModal.js"></script>

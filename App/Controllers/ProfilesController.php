@@ -6,6 +6,7 @@ namespace App\Controllers;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use App\Models\UsersFilter;
 use App\Facades\UsersFacade;
 
 class ProfilesController extends Controller
@@ -19,8 +20,10 @@ class ProfilesController extends Controller
      */
     public function show(Request $request, Response $response)
     {
-        $datas = UsersFacade::getAllProfiles($this->container, true);
-        return $this->render($response, 'pages/profiles.php', $datas);
+        return $this->render($response, 
+            'pages/profiles.php', 
+            UsersFacade::getAllProfiles($this->container, UsersFilter::Contributors)
+        );
     }
 
     /**
@@ -32,7 +35,9 @@ class ProfilesController extends Controller
      */
     public function showProfile(Request $request, Response $response, $args)
     {
-        $datas = UsersFacade::getProfile($this->container, $args['username'], true);
-        return $this->render($response, 'pages/profile.php', $datas);
+        return $this->render($response, 
+            'pages/profile.php', 
+            UsersFacade::getProfile($this->container, $args['username'], true)
+        );
     }
 }

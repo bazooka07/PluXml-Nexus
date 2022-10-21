@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * NEXUS application global settings
  * @author Pedro CADETE <pedro@hyperion-web.fr>
@@ -15,22 +15,27 @@ const DIR_THEMES = DIR_DOWNLOAD . '/themes';
 const PLUGINS_MAX_SIZE = '10MB';
 
 const DB_HOST = 'localhost';
-//const DB_HOST = '127.0.0.1';
-//const DB_HOST = 'mysql';
-const DB_DBNAME = '';
-const DB_CHARSET = 'utf8';
 const DB_PORT = '3306';
+const DB_DBNAME = '';
 const DB_USER = '';
 const DB_PASSWORD = '';
+const DB_CHARSET = 'utf8';
 
-const MAIL_PROVIDER = ''; // set "smtp" to use SMTP host and authentification otherwise set empty ('') to use the PHP function mail()
+const MAIL_PROVIDER = ''; // set 'smtp' to use SMTP host and authentification otherwise set empty ('') to use the PHP function mail()
 const MAIL_SMTP_HOST = '';
 const MAIL_SMTP_USERNAME = '';
 const MAIL_SMTP_PASSWORD = '';
 const MAIL_SMTP_PORT = '465';
 const MAIL_SMTP_SECURITY = 'ssl'; //possible values : 'ssl' or 'tls'
 
+const AUTH_SIGNUP_LIFETIME = 24; // hours
+
 const MAIL_FROM = 'name@mail.com';
 const MAIL_FROM_NAME = 'MailName';
 const MAIL_NEWUSER_SUBJECT = 'Welcome to PluXml Nexus';
-const MAIL_NEWUSER_BODY = '<p>Hello ##USERNAME##</p>To complete your signup and be able to login to <a href="https://ressources.pluxml.org">ressources.pluxml.org</a>, please confirm your email address by clicking the link below</p>##TOKEN##<p>This link will expire in 24h.</p>';
+const MAIL_NEWUSER_BODY = <<< EOT
+<p>Hello ##USERNAME##,</p>
+<p>To complete your signup and be able to login to <a href="##HREF##">##HREF##</a>, please confirm your email address by clicking the link below :</p>
+<p><a href="##LINK##">##LINK##</a></p>
+<p>This link will expire in ##HOURS##H.</p>
+EOT;

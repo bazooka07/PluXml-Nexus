@@ -11,6 +11,9 @@ use App\Facades\PluginsFacade;
 
 class PluginsController extends Controller
 {
+    private const ACTIVE_TAB = 3;
+    private const VIEW_ALL = 'pages/plugins.php';
+    private const VIEW_PLUGIN = 'pages/plugin.php';
 
     /**
      *
@@ -20,10 +23,14 @@ class PluginsController extends Controller
      */
     public function show(Request $request, Response $response)
     {
-        $datas['activeTab'] = 3;
-        $datas['categories'] = CategoriesFacade::getCategories($this->container);
-        $datas['plugins'] = PluginsFacade::getAllPlugins($this->container);
-        return $this->render($response, 'pages/plugins.php', $datas);
+        return $this->render($response,
+            self::VIEW_ALL,
+            [
+                'activeTab' => self::ACTIVE_TAB,
+                'categories' => CategoriesFacade::getCategories($this->container),
+                'plugins' => PluginsFacade::getAllPlugins($this->container),
+            ]
+        );
     }
 
     /**
@@ -35,10 +42,15 @@ class PluginsController extends Controller
      */
     public function showCategory(Request $request, Response $response, $args)
     {
-        $datas['activeTab'] = 3;
-        $datas['categories'] = CategoriesFacade::getCategories($this->container);
-        $datas['plugins'] = CategoriesFacade::getPluginsForCategory($this->container, $args['name']);
-        return $this->render($response, 'pages/plugins.php', $datas);
+        return $this->render($response,
+            self::VIEW_ALL,
+            [
+                'activeTab' => self::ACTIVE_TAB,
+                'categories' => CategoriesFacade::getCategories($this->container),
+                'category' => $args['name'],
+                'plugins' => CategoriesFacade::getPluginsForCategory($this->container, $args['name']),
+            ]
+        );
     }
 
     /**
@@ -50,8 +62,12 @@ class PluginsController extends Controller
      */
     public function showPlugin(Request $request, Response $response, $args)
     {
-        $datas['activeTab'] = 3;
-        $datas['plugin'] = PluginsFacade::getPlugin($this->container, $args['name']);
-        return $this->render($response, 'pages/plugin.php', $datas);
+        return $this->render($response,
+            self::VIEW_PLUGIN,
+            [
+                'activeTab' => self::ACTIVE_TAB,
+                'plugin' => PluginsFacade::getPlugin($this->container, $args['name']),
+            ]
+        );
     }
 }

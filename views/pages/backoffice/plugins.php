@@ -14,9 +14,7 @@
             </div>
         <?php endif; ?>
 
-        <a href="<?= $routerService->urlFor('boaddplugin') ?>">
-            <button>Add a plugin</button>
-        </a>
+        <a href="<?= $routerService->urlFor('boaddplugin') ?>"><button>Add a plugin</button></a>
 
         <div class="scrollable-table">
             <?php if (!empty($plugins)): ?>

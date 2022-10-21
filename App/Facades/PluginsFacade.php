@@ -24,8 +24,6 @@ class PluginsFacade extends Facade
      */
     static public function getAllPlugins(ContainerInterface $container, string $username = NULL)
     {
-        $plugins = [];
-
         if (isset($username)) {
             $userModel = UsersFacade::searchUser($container, $username);
             $pluginsModel = new PluginsModel($container, $userModel->id);
@@ -33,7 +31,7 @@ class PluginsFacade extends Facade
             $pluginsModel = new PluginsModel($container);
         }
 
-        return PluginsFacade::populatePluginsList($container, $pluginsModel);
+        return self::populatePluginsList($container, $pluginsModel);
     }
 
     /**
@@ -43,24 +41,27 @@ class PluginsFacade extends Facade
      */
     static public function getPlugin(ContainerInterface $container, string $name)
     {
-        $datas = [];
         $pluginModel = new PluginModel($container, $name);
 
-        if (!empty($pluginModel->name)) {
-            $datas['title'] = "Plugin $pluginModel->name Ressources - PluXml.org";
-            $datas['name'] = $pluginModel->name;
-            $datas['description'] = $pluginModel->description;
-            $datas['versionPlugin'] = $pluginModel->versionPlugin;
-            $datas['versionPluxml'] = $pluginModel->versionPluxml;
-            $datas['link'] = $pluginModel->link;
-            $datas['file'] = $pluginModel->file;
-            $datas['author'] = Facade::getAuthorUsernameById($container, $pluginModel->author);
-            $datas['category'] = CategoriesFacade::getPluginCategory($container, $pluginModel->category)->id;
-            $datas['categoryName'] = CategoriesFacade::getPluginCategory($container, $pluginModel->category)->name;
-            $datas['categoryIcon'] = CategoriesFacade::getPluginCategory($container, $pluginModel->category)->icon;
+        if (empty($pluginModel->name)) {
+            return false;
         }
 
-        return $datas;
+        $category = CategoriesFacade::getPluginCategory($container, $pluginModel->category);
+        return [
+            'id' => $pluginModel->id,
+            'title' => "Plugin $pluginModel->name Ressources - PluXml.org",
+            'name' => $pluginModel->name,
+            'description' => $pluginModel->description,
+            'versionPlugin' => $pluginModel->versionPlugin,
+            'versionPluxml' => $pluginModel->versionPluxml,
+            'link' => $pluginModel->link,
+            'file' => $pluginModel->file,
+            'author' => Facade::getAuthorUsernameById($container, $pluginModel->author),
+            'category' => $category->id,
+            'categoryName' => $category->name,
+            'categoryIcon' => $category->icon,
+        ];
     }
 
     /**
@@ -95,24 +96,27 @@ class PluginsFacade extends Facade
     {
         $pluginModel = new PluginModel($container, $name);
         $pluginModel->delete($container, $name) != false;
-        return unlink($_SERVER['DOCUMENT_ROOT'] . DIR_PLUGINS . DIRECTORY_SEPARATOR . $name . '.zip');
+        return unlink(PUBLIC_DIR . DIR_PLUGINS . DIRECTORY_SEPARATOR . $name . '.zip'); # !!! dans model
     }
 
     static public function populatePluginsList(ContainerInterface $container, PluginsModel $pluginsModel)
     {
-        $plugins = null;
+        $plugins = [];
 
         if (!empty($pluginsModel)) {
             foreach ($pluginsModel->plugins as $key => $value) {
-                $plugins[$key]['name'] = $value['name'];
-                $plugins[$key]['description'] = $value['description'];
-                $plugins[$key]['author'] = Facade::getAuthorUsernameById($container, $value['author']);
-                $plugins[$key]['versionPlugin'] = $value['versionplugin'];
-                $plugins[$key]['versionPluxml'] = $value['versionpluxml'];
-                $plugins[$key]['link'] = $value['link'];
-                $plugins[$key]['file'] = $value['file'];
-                $plugins[$key]['categoryName'] = CategoriesFacade::getPluginCategory($container, $value['category'])->name;
-                $plugins[$key]['categoryIcon'] = CategoriesFacade::getPluginCategory($container, $value['category'])->icon;
+                $plugins[] = [
+                    'id' => $value['id'],
+                    'name' => $value['name'],
+                    'description' => $value['description'],
+                    'author' => Facade::getAuthorUsernameById($container, $value['author']),
+                    'versionPlugin' => $value['versionplugin'],
+                    'versionPluxml' => $value['versionpluxml'],
+                    'link' => $value['link'],
+                    'file' => $value['file'],
+                    'categoryName' => CategoriesFacade::getPluginCategory($container, $value['category'])->name,
+                    'categoryIcon' => CategoriesFacade::getPluginCategory($container, $value['category'])->icon,
+                ];
             }
         }
 

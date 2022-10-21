@@ -49,8 +49,9 @@
             <div <?php if (isset($flash['category'][0])): ?>style="color:red"<?php endif; ?>>
                 <label for="category">Category: </label>
                 <select name="category" id="category" required>
+                    <option value="">...</option>
                     <?php foreach ($categories as $category => $value): ?>
-                        <option value="<?= $value['id'] ?>" <?php if ($formOldValues['category'] == $value['id']):?>selected="selected"<?php endif; ?>><?= $value['name'] ?></option>
+                        <option value="<?= $value['id'] ?>" <?php if (isset($formOldValues['category']) and $formOldValues['category'] == $value['id']):?>selected="selected"<?php endif; ?>><?= $value['name'] ?></option>
                     <?php endforeach; ?>
                 </select>
                 <?php if (isset($flash['category'][0])): ?><p><?= $flash['category'][0] ?></p><?php endif; ?>
