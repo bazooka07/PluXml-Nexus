@@ -96,8 +96,9 @@ class BackofficeThemesController extends BackofficeController
                 $result = true;
                 if (isset($post['file'])) {
                     $filename = $post['name'] . '.zip';
+                    $target = $this->dirTarget . DIRECTORY_SEPARATOR . $filename;
                     $dirTmp = PUBLIC_DIR . DIR_TMP;
-                    $result = rename($dirTmp . DIRECTORY_SEPARATOR . $filename, $this->dirTarget . DIRECTORY_SEPARATOR . $filename);
+                    $result = rename($dirTmp . DIRECTORY_SEPARATOR . $filename, $target);
                 }
                 if ($result) {
                     $this->messageService->addMessage('success', sprintf(self::MSG_SUCCESS_EDITRESSOURCE, $this->ressourceType));
@@ -133,11 +134,14 @@ class BackofficeThemesController extends BackofficeController
         if (empty($errors) && empty(ThemesFacade::getTheme($this->container, $post['name']))) {
             if (ThemesFacade::saveTheme($this->container, $post)) {
                 $filename = $post['name'] . '.zip';
-                if (!file_exists($this->dirTarget . DIRECTORY_SEPARATOR . $filename)) {
+                $target = $this->dirTarget . DIRECTORY_SEPARATOR . $filename;
+                if (!file_exists($target)) {
                     $dirTmp = PUBLIC_DIR . DIR_TMP;
-                    if (rename($dirTmp . DIRECTORY_SEPARATOR . $filename, $this->dirTarget . DIRECTORY_SEPARATOR . $filename)) {
+                    if (rename($dirTmp . DIRECTORY_SEPARATOR . $filename, $target))
+                    {
                         $this->messageService->addMessage('success', sprintf(self::MSG_SUCCESS_EDITRESSOURCE, $this->ressourceType));
                     } else {
+                        # Delete the theme in the database !
                         $errors['error'] = sprintf(self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType);
                     }
                 } else {

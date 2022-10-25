@@ -9,7 +9,6 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Container\ContainerInterface;
 use App\Facades\PluginsFacade;
-use Respect\Validation\Validator;
 
 /**
  * Class BackofficePluginsController
@@ -102,8 +101,9 @@ class BackofficePluginsController extends BackOfficeController
                 $result = true;
                 if (isset($post['file'])) {
                     $filename = $post['name'] . '.zip';
+                    $target = $this->dirTarget . DIRECTORY_SEPARATOR . $filename;
                     $dirTmp = PUBLIC_DIR . DIR_TMP;
-                    $result = rename($dirTmp . DIRECTORY_SEPARATOR . $filename, $this->dirTarget . DIRECTORY_SEPARATOR . $filename);
+                    $result = rename($dirTmp . DIRECTORY_SEPARATOR . $filename, $target);
                 }
                 if ($result) {
                     $this->messageService->addMessage('success', sprintf(self::MSG_SUCCESS_EDITRESSOURCE, $this->ressourceType));
@@ -139,12 +139,14 @@ class BackofficePluginsController extends BackOfficeController
         if (empty($errors) && empty(PluginsFacade::getPlugin($this->container, $post['name']))) {
             if (PluginsFacade::savePlugin($this->container, $post)) {
                 $filename = $post['name'] . '.zip';
-                $dirTmp = PUBLIC_DIR . DIR_TMP;
-                if (!file_exists($this->dirTarget . DIRECTORY_SEPARATOR . $filename)) {
-                    $result = rename($dirTmp . DIRECTORY_SEPARATOR . $filename, $dirTarget . DIRECTORY_SEPARATOR . $filename);
-                    if ($result) {
+                $target = $this->dirTarget . DIRECTORY_SEPARATOR . $filename;
+                if (!file_exists($target)) {
+                    $dirTmp = PUBLIC_DIR . DIR_TMP;
+            if (rename($dirTmp . DIRECTORY_SEPARATOR . $filename, $target))
+            {
                         $this->messageService->addMessage('success', sprintf(self::MSG_SUCCESS_EDITRESSOURCE, $this->ressourceType));
                     } else {
+                        # Delete the plugin in the database !
                         $errors['error'] = sprintf(self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType);
                     }
                 } else {

@@ -34,26 +34,7 @@ class UsersFacade
 
     static public function getAllProfilesWithItemsCount(ContainerInterface $container): array
     {
-        $datas = UsersFacade::getAllProfiles($container, UsersFilter::ItemsCount);
-
-        /*
-        $usersWithPluginsModel = new UsersModel($container, true);
-        $usersWithPlugins = $usersWithPluginsModel->users;
-
-        foreach ($datas['profiles'] as $key => $profile)
-        {
-            $datas['profiles'][$key]['hadPlugins'] = false;
-            foreach ($usersWithPlugins as $user => $profileWithPlugins)
-            {
-                if (in_array($profile['id'], $profileWithPlugins))
-                {
-                    $datas['profiles'][$key]['hadPlugins'] = true;
-                }
-            }
-        }
-        * */
-
-        return $datas;
+        return UsersFacade::getAllProfiles($container, UsersFilter::ItemsCount);
     }
 
     /**

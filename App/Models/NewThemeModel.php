@@ -18,7 +18,7 @@ class NewThemeModel extends Model
 
     private $date;
 
-    private $versioniTheme;
+    private $versionTheme;
 
     private $versionPluxml;
 
@@ -35,11 +35,11 @@ class NewThemeModel extends Model
         $this->name = $plugin['name'];
         $this->description = $plugin['description'];
         $this->author = $UserModel->id;
-        $this->date = date('Y-m-d H:i:s', mktime(date('H'), date('i'), date('s'), date('m'), date('d'), date('Y')));
+        $this->date = date('Y-m-d H:i:s');
         $this->versionTheme = $plugin['versionTheme'];
         $this->versionPluxml = $plugin['versionPluxml'];
         $this->link = $plugin['link'];
-        $this->file = DIR_PLUGINS . DIRECTORY_SEPARATOR . $plugin['name'] . '.zip';
+        $this->file = DIR_THEMES . DIRECTORY_SEPARATOR . $plugin['name'] . '.zip';
     }
 
     /**

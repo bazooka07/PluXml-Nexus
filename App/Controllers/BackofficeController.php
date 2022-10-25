@@ -78,10 +78,6 @@ class BackofficeController extends Controller
     {
         $errors = [];
         $post = $request->getParsedBody();
-        $uploadedFiles = $request->getUploadedFiles();
-        if (empty($uploadedFiles['file'])) {
-            throw new Exception('No file has been send');
-        }
 
         if (!empty($post['description'])) {
             Validator::alnum('. , - _')->length(1, 999)->validate($post['description']) || $errors['description'] = self::MSG_VALID_TOLONG1000;
@@ -105,6 +101,10 @@ class BackofficeController extends Controller
 
         if ($newRessource || $newFile) {
             // Uploaded file move, rename and validation
+            $uploadedFiles = $request->getUploadedFiles();
+            if (empty($uploadedFiles['file'])) {
+                throw new Exception('No file has been send');
+            }
             $uploadedFile = $uploadedFiles['file'];
             if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
                 $filename = $post['name'] . '.zip';
@@ -114,7 +114,7 @@ class BackofficeController extends Controller
                     ->size(NULL, PLUGINS_MAX_SIZE)
                     ->validate($dirTmp . DIRECTORY_SEPARATOR . $filename) || $errors['file'] = self::MSG_VALID_FILE;
             } else {
-                $errors['error'] = self::MSG_ERROR_TECHNICAL_PLUGINS;
+                $errors['error'] = sprintf(self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType);
             }
         }
 
