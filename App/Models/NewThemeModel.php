@@ -10,36 +10,32 @@ use App\Facades\UsersFacade;
 class NewThemeModel extends Model
 {
 
-    private $name;
-
+    private $id;
+    private String $name;
     private $description;
-
     private $author;
-
     private $date;
-
-    private $versionTheme;
-
-    private $versionPluxml;
-
+    private $version;
+    private $pluxml;
     private $link;
+    private String $file;
+    private String $media;
 
-    private string $file;
-
-    public function __construct(ContainerInterface $container, Array $plugin)
+    public function __construct(ContainerInterface $container, Array $theme)
     {
         parent::__construct($container);
 
-        $UserModel = UsersFacade::searchUser($container, $plugin['author']);
-
-        $this->name = $plugin['name'];
-        $this->description = $plugin['description'];
-        $this->author = $UserModel->id;
-        $this->date = date('Y-m-d H:i:s');
-        $this->versionTheme = $plugin['versionTheme'];
-        $this->versionPluxml = $plugin['versionPluxml'];
-        $this->link = $plugin['link'];
-        $this->file = DIR_THEMES . DIRECTORY_SEPARATOR . $plugin['name'] . '.zip';
+        $this->id = $theme['id'];
+        $this->name = $theme['name'];
+        $this->description = $theme['description'];
+        $this->author = $theme['author'];
+        $this->version = $theme['version'];
+        $this->pluxml = $theme['pluxml'];
+        $this->link = $theme['link'];
+        if (!empty($theme['file'])) {
+            $this->file = isset($theme['file']) ? $theme['file'] : '';
+            $this->media = isset($theme['media']) ? $theme['media'] : '';
+        }
     }
 
     /**
@@ -48,7 +44,12 @@ class NewThemeModel extends Model
      */
     public function saveNewTheme()
     {
-        return $this->pdoService->insert("INSERT INTO themes SET name = '$this->name', description = '$this->description', author = '$this->author', date = '$this->date', versionTheme = '$this->versionTheme', versionPluxml = '$this->versionPluxml', link = '$this->link', file= '$this->file'");
+        $description = addslashes($this->description);
+        $query = <<< EOT
+INSERT INTO themes(name,description,author,date,version,pluXml,link,file,media)
+ VALUES('$this->name', '$description', $this->author, NOW(), '$this->version', '$this->pluxml', '$this->link','$this->file', '$this->media');
+EOT;
+        return $this->pdoService->insert($query);
     }
 
     /**
@@ -57,7 +58,27 @@ class NewThemeModel extends Model
      */
     public function updateTheme()
     {
-        return $this->pdoService->insert("UPDATE themes SET description = '$this->description', author = '$this->author', date = '$this->date', versionTheme = '$this->versionTheme', versionPluxml = '$this->versionPluxml', link = '$this->link', file= '$this->file' WHERE name = '$this->name'");
+        if (!empty($this->file))
+        {
+            $extra = <<< EOT
+
+    file='$this->file',
+    media='$this->media',
+EOT;
+        } else {
+            $extra = '';
+        }
+        $description = addslashes($this->description);
+        $query = <<< EOT
+UPDATE themes SET
+    description='$description',
+    author='$this->author',
+    date=NOW(),
+    version='$this->version',
+    pluxml='$this->pluxml',$extra
+    link='$this->link'
+WHERE id = $this->id
+EOT;
+        return $this->pdoService->insert($query);
     }
 }
-

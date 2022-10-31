@@ -18,9 +18,9 @@ class NewPluginModel extends Model
 
     private $date;
 
-    private $versionPlugin;
+    private $version;
 
-    private $versionPluxml;
+    private $pluxml;
 
     private $link;
 
@@ -32,16 +32,18 @@ class NewPluginModel extends Model
     {
         parent::__construct($container);
 
-        $UserModel = UsersFacade::searchUser($container, $plugin['author']);
-
+        $this->id = $plugin['id'];
         $this->name = $plugin['name'];
         $this->description = $plugin['description'];
-        $this->author = $UserModel->id;
-        $this->date = date('Y-m-d H:i:s');
-        $this->versionPlugin = $plugin['versionPlugin'];
-        $this->versionPluxml = $plugin['versionPluxml'];
+        $this->author = $plugin['author'];
+        $this->date = isset($plugin['date']) ? $plugin['date'] : '';
+        $this->version = $plugin['version'];
+        $this->pluxml = $plugin['pluxml'];
         $this->link = $plugin['link'];
-        $this->file = DIR_PLUGINS . DIRECTORY_SEPARATOR . $plugin['name'] . '.zip';
+        if (!empty($plugin['file'])) {
+            $this->file = $plugin['file'];
+            $this->media = $plugin['media'];
+        }
         $this->category = $plugin['category'];
     }
 
@@ -51,7 +53,12 @@ class NewPluginModel extends Model
      */
     public function saveNewPlugin()
     {
-        return $this->pdoService->insert("INSERT INTO plugins SET name = '$this->name', description = '$this->description', author = '$this->author', date = '$this->date', versionPlugin = '$this->versionPlugin', versionPluxml = '$this->versionPluxml', link = '$this->link', file= '$this->file', category = '$this->category'");
+        $description = addslashes($this->description);
+        $query = <<< EOT
+INSERT INTO plugins(name,description,author,date,version,pluxml,link,file,media,category) VALUES
+    ('$this->name', '$description', '$this->author', '$this->date', '$this->version', '$this->pluxml', '$this->link', '$this->file', '$this->media', '$this->category');
+EOT;
+        return $this->pdoService->insert($query);
     }
 
     /**
@@ -60,6 +67,28 @@ class NewPluginModel extends Model
      */
     public function updatePlugin()
     {
-        return $this->pdoService->insert("UPDATE plugins SET description = '$this->description', author = '$this->author', date = '$this->date', versionPlugin = '$this->versionPlugin', versionPluxml = '$this->versionPluxml', link = '$this->link', file= '$this->file', category = '$this->category' WHERE name = '$this->name'");
+        if (!empty($this->file))
+        {
+            $extra = <<< EOT
+
+    file='$this->file',
+    media='$this->media',
+EOT;
+        } else {
+            $extra = '';
+        }
+        $description = addslashes($this->description);
+        $query = <<< EOT
+UPDATE plugins SET
+    description = '$description',
+    author = '$this->author',
+    date = NOW(),
+    version = '$this->version',
+    pluxml = '$this->pluxml',$extra
+    link = '$this->link',
+    category = '$this->category'
+WHERE id = '$this->id';
+EOT;
+        return $this->pdoService->insert($query);
     }
 }

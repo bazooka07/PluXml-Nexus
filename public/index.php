@@ -16,6 +16,10 @@ session_start();
 // NEXUS application global settings
 require_once '../config/settings.php';
 
+function reverseDate($input) {
+    return implode('/', array_reverse(explode('-', $input)));
+}
+
 // SLIM4 application initialisation with the PHP-DI container
 $container = new Container;
 AppFactory::setContainer($container);
@@ -32,4 +36,5 @@ require_once '../config/routes.php';
 
 // SLIM4 application launching
 const PUBLIC_DIR = __DIR__;
+
 $app->run();

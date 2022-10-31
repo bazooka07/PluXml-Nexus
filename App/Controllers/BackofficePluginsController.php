@@ -18,14 +18,15 @@ class BackofficePluginsController extends BackOfficeController
 {
 
     private const NAMED_ROUTE_BOPLUGINS = 'boplugins';
-
     private const NAMED_ROUTE_SAVEPLUGIN = 'boaddplugin';
+    private const NAMED_ROUTE_EDITPLUGIN = 'boeditplugin';
 
     public function __construct(ContainerInterface $container)
     {
         parent::__construct($container);
         $this->ressourceType = 'plugin';
-        $this->dirTarget = PUBLIC_DIR . DIR_PLUGINS;
+        $this->dirTarget = DIR_PLUGINS;
+        $this->mediaName = 'icon';
     }
 
     /**
@@ -92,35 +93,24 @@ class BackofficePluginsController extends BackOfficeController
      */
     public function edit(Request $request, Response $response, array $args): Response
     {
-        $post = $request->getParsedBody();
-
-        $errors = self::ressourceValidator($request, false, isset($post['file']));
+        $namedRoute = self::NAMED_ROUTE_EDITPLUGIN;
+ 
+        $errors = self::ressourceValidator($request);
 
         if (empty($errors)) {
-            if (PluginsFacade::editPlugin($this->container, $post)) {
-                $result = true;
-                if (isset($post['file'])) {
-                    $filename = $post['name'] . '.zip';
-                    $target = $this->dirTarget . DIRECTORY_SEPARATOR . $filename;
-                    $dirTmp = PUBLIC_DIR . DIR_TMP;
-                    $result = rename($dirTmp . DIRECTORY_SEPARATOR . $filename, $target);
-                }
-                if ($result) {
-                    $this->messageService->addMessage('success', sprintf(self::MSG_SUCCESS_EDITRESSOURCE, $this->ressourceType));
-                } else {
-                    $errors['error'] = sprintf(self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType);
-                }
+            if (PluginsFacade::editPlugin($this->container, $this->post)) {
+                $this->messageService->addMessage('success', sprintf(self::MSG_SUCCESS_EDITRESSOURCE, $this->ressourceType));
+                $namedRoute = self::NAMED_ROUTE_BOPLUGINS;
             } else {
                 $this->messageService->addMessage('error', self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType);
             }
         } else {
-            $this->messageService->addMessage('error', self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType);
             foreach ($errors as $key => $message) {
                 $this->messageService->addMessage($key, $message);
             }
         }
 
-        return $this->redirect($response, self::NAMED_ROUTE_BOPLUGINS, $args);
+        return $this->redirect($response, $namedRoute, $args);
     }
 
     /**
@@ -132,40 +122,28 @@ class BackofficePluginsController extends BackOfficeController
      */
     public function save(Request $request, Response $response): Response
     {
+        $namedRoute = self::NAMED_ROUTE_SAVEPLUGIN;
+
         $post = $request->getParsedBody();
         $errors = self::ressourceValidator($request, true);
 
         // Validator error and plugin does not exist
         if (empty($errors) && empty(PluginsFacade::getPlugin($this->container, $post['name']))) {
             if (PluginsFacade::savePlugin($this->container, $post)) {
-                $filename = $post['name'] . '.zip';
-                $target = $this->dirTarget . DIRECTORY_SEPARATOR . $filename;
-                if (!file_exists($target)) {
-                    $dirTmp = PUBLIC_DIR . DIR_TMP;
-            if (rename($dirTmp . DIRECTORY_SEPARATOR . $filename, $target))
-            {
-                        $this->messageService->addMessage('success', sprintf(self::MSG_SUCCESS_EDITRESSOURCE, $this->ressourceType));
-                    } else {
-                        # Delete the plugin in the database !
-                        $errors['error'] = sprintf(self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType);
-                    }
-                } else {
-                    $errors['error'] = sprintf(self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType);
-                }
+                $this->messageService->addMessage('success', sprintf(self::MSG_SUCCESS_EDITRESSOURCE, $this->ressourceType));
+                $namedRoute = self::NAMED_ROUTE_BOPLUGINS;
             } else {
-                $errors['error'] = sprintf(self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType);
+                # Delete the plugin in the database !
             }
         } else {
             $errors['error'] = sprintf(self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType);
         }
 
         if (empty($errors)) {
-            $namedRoute = self::NAMED_ROUTE_BOPLUGINS;
         } else {
             foreach ($errors as $key => $message) {
                 $this->messageService->addMessage($key, $message);
             }
-            $namedRoute = self::NAMED_ROUTE_SAVEPLUGIN;
         }
 
         return $this->redirect($response, $namedRoute);

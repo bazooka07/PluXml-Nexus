@@ -1,30 +1,23 @@
 <div class="content">
     <?php require_once 'tags/tabs.php' ?>
-
-    <div class="">
+    <div>
         <h2><?= $username ?></h2>
-        <ul>
-            <li>
-                Website: <a href="<?= $website ?>" target="_blank"><?= $website ?></a></li>
-            </li>
-        </ul>
+<?php if (!empty($website)): ?>
+        <div>
+           Website: <a href="<?= $website ?>" target="_blank"><?= $website ?></a></li>
+        </div>
+<?php endif; ?>
     </div>
+<?php if (!empty($plugins)): ?>
     <div class="grid">
         <h3>Plugins:</h3>
-            <?php if (!empty($plugins)): ?>
-                <?php include 'tags/pluginsList.php'; ?>
-            <?php else: ?>
-                <div class="alert orange">No plugins found</div>
-            <?php endif; ?>
+<?php include 'tags/pluginsList.php'; ?>
     </div>
-
+<?php endif; ?>
+<?php if (!empty($themes)): ?>
     <div class="grid">
         <h3>Themes:</h3>
-            <?php if (!empty($themes)): ?>
-                <?php include 'tags/themesList.php'; ?>
-            <?php else: ?>
-                <div class="alert orange">No themes found</div>
-            <?php endif; ?>
-        </div>
+<?php include 'tags/themesList.php'; ?>
     </div>
+<?php endif; ?>
 </div>

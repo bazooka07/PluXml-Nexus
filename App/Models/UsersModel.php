@@ -11,7 +11,7 @@ class UsersModel extends Model
 {
     const DELETE_EXPIRE         = 'DELETE from users WHERE token != "" AND tokenexpire < now() AND role != \'admin\';';
     const EXPIRE_COUNT          = <<< EOT
-SELECT count(*)
+SELECT count(*) AS cnt
     FROM users
     WHERE token != "" AND tokenexpire<now() AND role!= 'admin';
 EOT;
@@ -78,6 +78,6 @@ EOT;
     public function expireCount()
     {
         $rows = $this->pdoService->query(self::EXPIRE_COUNT); # retourne un tableau de 1 rangée !!!!
-        return $rows ? $rows[0][0] : 0;
+        return $rows ? $rows[0]['cnt'] : 0;
     }
 }

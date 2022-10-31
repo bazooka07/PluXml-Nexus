@@ -13,8 +13,8 @@
         </p>
         <p><?= $plugin['description'] ?></p>
         <ul class="unstyled-list">
-            <li><i class="icon-tag"></i>Version : <?= $plugin['versionPlugin'] ?></li>
-            <li><i class="icon-leaf"></i>PluXml version required : <?= $plugin['versionPluxml'] ?></li>
+            <li><i class="icon-tag"></i>Version : <?= $plugin['version'] ?></li>
+            <li><i class="icon-leaf"></i>PluXml version required : <?= $plugin['pluxml'] ?></li>
         </ul>
         <a href=" <?= $plugin['file'] ?>">
             <button><i class="icon-download"></i>Download</button>

@@ -4,6 +4,9 @@
  */
 namespace App\Services;
 
+/*
+ * https://php.net/manual/fr/pdostatement.fetch.php
+ * */
 class PdoService
 {
 
@@ -24,7 +27,7 @@ class PdoService
     {
         $req = $this->pdo->prepare($sql);
         $req->execute();
-        return $req->fetchAll();
+        return $req->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     /**

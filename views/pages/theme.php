@@ -9,12 +9,12 @@
 	primis in faucibus. Pellentesque habitant morbi tristique senectus et
 	netus et malesuada fames ac turpis egestas. Nunc in erat augue.
 	Vestibulum a ipsum eu massa finibus fringilla.</p>
-
+<img src="<?= $media ?>" />
 <ul>
 	<li><?= $name ?></li>
 	<li><?= $description ?></li>
-	<li><?= $versionTheme ?></li>
-	<li><?= $versionPluxml ?></li>
+	<li><?= $version ?></li>
+	<li><?= $pluxml ?></li>
 	<li><?= $author ?></li>
-	<li><?= $link ?></li>
+	<li><a href="<?= $link ?>" target="_blank"><?= $link ?></a></li>
 </ul>

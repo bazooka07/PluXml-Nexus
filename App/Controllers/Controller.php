@@ -44,6 +44,7 @@ class Controller
         $this->messageService = $this->container->get('flash');
         $this->mailService = $this->container->get('mail');
         $this->currentUser = isset($_SESSION['user']) ? $_SESSION['user'] : null;
+        $this->currentUserId = isset($_SESSION['userid']) ? $_SESSION['userid'] : null;
     }
 
     /**

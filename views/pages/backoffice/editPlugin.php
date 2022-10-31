@@ -23,7 +23,8 @@
             <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
             <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
             <input type="hidden" name="name" value="<?= $plugin['name'] ?>">
-            <input type="hidden" name="author" value="<?= $_SESSION['user'] ?>">
+            <input type="hidden" name="id" value="<?= $plugin['id'] ?>">
+            <input type="hidden" name="author" value="<?= $_SESSION['userid'] ?>">
             <div
                 <?php if (isset($flash['description'][0]) or isset($flash['description'][0])): ?>style="color:red"<?php endif; ?>>
                 <label for="description">Description*: </label>
@@ -41,19 +42,19 @@
                 </select>
                 <?php if (isset($flash['category'][0])): ?><p><?= $flash['category'][0] ?></p><?php endif; ?>
             </div>
-            <div <?php if (isset($flash['versionPlugin'][0])): ?>style="color:red"<?php endif; ?>>
-                <label for="versionPlugin">Version*: </label>
-                <input type="text" name="versionPlugin" id="versionPlugin"
-                       <?php if (isset($formOldValues['versionPlugin'])): ?>value="<?= $formOldValues['versionPlugin'] ?>"
-                       <?php else: ?>value="<?= $plugin['versionPlugin'] ?>"<?php endif; ?>>
-                <?php if (isset($flash['versionPlugin'][0])): ?><p><?= $flash['versionPlugin'][0] ?></p><?php endif; ?>
+            <div <?php if (isset($flash['version'][0])): ?>style="color:red"<?php endif; ?>>
+                <label for="version">Version*: </label>
+                <input type="text" name="version" id="version"
+                       <?php if (isset($formOldValues['version'])): ?>value="<?= $formOldValues['version'] ?>"
+                       <?php else: ?>value="<?= $plugin['version'] ?>"<?php endif; ?>>
+                <?php if (isset($flash['version'][0])): ?><p><?= $flash['version'][0] ?></p><?php endif; ?>
             </div>
-            <div <?php if (isset($flash['versionPluxml'][0])): ?>style="color:red"<?php endif; ?>>
-                <label for="versionPluxml">PluXml version*: </label>
-                <input type="text" name="versionPluxml" id="versionPluxml"
-                       <?php if (isset($formOldValues['versionPluxml'])): ?>value="<?= $formOldValues['versionPluxml'] ?>"
-                       <?php else: ?>value="<?= $plugin['versionPluxml'] ?>"<?php endif; ?>>
-                <?php if (isset($flash['versionPluxml'][0])): ?><p><?= $flash['versionPluxml'][0] ?></p><?php endif; ?>
+            <div <?php if (isset($flash['pluxml'][0])): ?>style="color:red"<?php endif; ?>>
+                <label for="pluxml">PluXml version*: </label>
+                <input type="text" name="pluxml" id="pluxml"
+                       <?php if (isset($formOldValues['pluxml'])): ?>value="<?= $formOldValues['pluxml'] ?>"
+                       <?php else: ?>value="<?= $plugin['pluxml'] ?>"<?php endif; ?>>
+                <?php if (isset($flash['pluxml'][0])): ?><p><?= $flash['pluxml'][0] ?></p><?php endif; ?>
             </div>
             <div <?php if (isset($flash['link'][0])): ?>style="color:red"<?php endif; ?>>
                 <label for="link">Link: </label>

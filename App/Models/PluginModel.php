@@ -11,7 +11,7 @@ class PluginModel extends Model
 {
 
     public $id;
-    
+
     public $name;
 
     public $description;
@@ -20,9 +20,9 @@ class PluginModel extends Model
 
     public $date;
 
-    public $versionPlugin;
+    public $version;
 
-    public $versionPluxml;
+    public $pluxml;
 
     public $link;
 
@@ -42,10 +42,11 @@ class PluginModel extends Model
             $this->description = $pdo[0]['description'];
             $this->author = $pdo[0]['author'];
             $this->date = $pdo[0]['date'];
-            $this->versionPlugin = $pdo[0]['versionplugin'];
-            $this->versionPluxml = $pdo[0]['versionpluxml'];
+            $this->version = $pdo[0]['version'];
+            $this->pluxml = $pdo[0]['pluxml'];
             $this->link = $pdo[0]['link'];
             $this->file = $pdo[0]['file'];
+            $this->media = $pdo[0]['media'];
             $this->category = $pdo[0]['category'];
         }
     }

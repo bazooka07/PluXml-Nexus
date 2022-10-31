@@ -33,14 +33,16 @@ class ThemeModel extends Model
 
         if (!empty($pdo))
         {
+            $this->id = $pdo[0]['id'];
             $this->name = $pdo[0]['name'];
             $this->description = $pdo[0]['description'];
             $this->author = $pdo[0]['author'];
             $this->date = $pdo[0]['date'];
-            $this->versionTheme = $pdo[0]['versiontheme'];
-            $this->versionPluxml = $pdo[0]['versionpluxml'];
+            $this->version = $pdo[0]['version'];
+            $this->pluxml = $pdo[0]['pluxml'];
             $this->link = $pdo[0]['link'];
             $this->file = $pdo[0]['file'];
+            $this->media = $pdo[0]['media'];
         }
     }
 

@@ -36,8 +36,8 @@
                                 <a href="<?= $routerService->urlFor('theme', ['name' => $theme['name']]) ?>"><?= $theme['name'] ?></a>
                             </td>
                             <td><?= $theme['description'] ?></td>
-                            <td><?= $theme['versionTheme'] ?></td>
-                            <td><?= $theme['versionPluxml'] ?></td>
+                            <td><?= $theme['version'] ?></td>
+                            <td><?= $theme['pluxml'] ?></td>
                             <td><a href="<?= $theme['link'] ?>"><?= $theme['link'] ?></a></td>
                             <td>
                                 <a href="<?= $routerService->urlFor('boedittheme', ['name' => $theme['name']]) ?>"><i

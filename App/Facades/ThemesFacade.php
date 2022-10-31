@@ -2,8 +2,6 @@
 
 namespace App\Facades;
 
-
-
 use Psr\Container\ContainerInterface;
 use App\Models\ThemesModel;
 use App\Models\ThemeModel;
@@ -22,15 +20,9 @@ class ThemesFacade extends Facade
      * @param string|null $username
      * @return array
      */
-    static public function getAllThemes(ContainerInterface $container, String $username = NULL)
+    static public function getAllThemes(ContainerInterface $container, String $userid = NULL)
     {
-        if (isset($username)) {
-            $userModel = UsersFacade::searchUser($container, $username);
-            $themesModel = new ThemesModel($container, $userModel->id);
-        } else {
-            $themesModel = new ThemesModel($container);
-        }
-
+        $themesModel = new ThemesModel($container, $userid);
         return self::populateThemesList($container, $themesModel);
     }
 
@@ -43,13 +35,17 @@ class ThemesFacade extends Facade
         }
 
         return [
+            'id' => $themeModel->id,
             'title' => "Theme $themeModel->name Ressources - PluXml.org",
             'name' => $themeModel->name,
             'description' => $themeModel->description,
-            'versionTheme' => $themeModel->versionTheme,
-            'versionPluxml' => $themeModel->versionPluxml,
+            'version' => $themeModel->version,
+            'pluxml' => $themeModel->pluxml,
+            'date' => $themeModel->date,
             'link' => $themeModel->link,
             'file' => $themeModel->file,
+            'media' => $themeModel->media,
+            'authorid' => $themeModel->author,
             'author' => Facade::getAuthorUsernameById($container, $themeModel->author),
         ];
     }
@@ -86,7 +82,7 @@ class ThemesFacade extends Facade
     {
         $themeModel = new ThemeModel($container, $name);
         $themeModel->delete($container, $name) != false;
-        return unlink(PUBLIC_DIR . DIR_THEMES . DIRECTORY_SEPARATOR . $name . '.zip'); # !!! dans model
+        return unlink(PUBLIC_DIR . $themeModel->file);
     }
 
     static public function populateThemesList(ContainerInterface $container, ThemesModel $themesModel)
@@ -94,16 +90,19 @@ class ThemesFacade extends Facade
         $themes = [];
 
         if (!empty($themesModel)) {
-            foreach ($themesModel->themes as $key => $value) {
+            foreach ($themesModel->themes as $infos) {
                 $themes[] = [
-                    'id' => $value['id'],
-                    'name' => $value['name'],
-                    'description' => $value['description'],
-                    'author' => Facade::getAuthorUsernameById($container, $value['author']),
-                    'versionTheme' => $value['versiontheme'],
-                    'versionPluxml' => $value['versionpluxml'],
-                    'link' => $value['link'],
-                    'file' => $value['file'],
+                    'id' => $infos['id'],
+                    'name' => $infos['name'],
+                    'description' => $infos['description'],
+                    'username' => isset($infos['username']) ? $infos['username'] : '',
+                    'author' => $infos['author'],
+                    'version' => $infos['version'],
+                    'pluxml' => $infos['pluxml'],
+                    'date' => $infos['date'],
+                    'link' => $infos['link'],
+                    'file' => $infos['file'],
+                    'media' => $infos['media'],
                 ];
             }
         }

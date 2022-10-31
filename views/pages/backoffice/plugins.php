@@ -36,8 +36,8 @@
                                 <a href="<?= $routerService->urlFor('plugin', ['name' => $plugin['name']]) ?>"><?= $plugin['name'] ?></a>
                             </td>
                             <td><?= $plugin['description'] ?></td>
-                            <td><?= $plugin['versionPlugin'] ?></td>
-                            <td><?= $plugin['versionPluxml'] ?></td>
+                            <td><?= $plugin['version'] ?></td>
+                            <td><?= $plugin['pluxml'] ?></td>
                             <td><a href="<?= $plugin['link'] ?>"><?= $plugin['link'] ?></a></td>
                             <td>
                                 <a href="<?= $routerService->urlFor('boeditplugin', ['name' => $plugin['name']]) ?>"><i

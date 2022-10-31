@@ -18,10 +18,10 @@ class CategoriesFacade extends Facade
      * @param ContainerInterface $container
      * @return array
      */
-    static public function getCategories(ContainerInterface $container)
+    static public function getCategories(ContainerInterface $container, bool $all=false)
     {
         $categories = [];
-        $categoriesModel = new CategoriesModel($container);
+        $categoriesModel = new CategoriesModel($container, $all);
 
         foreach ($categoriesModel->categories as $category => $value) {
             $categories[$category]['id'] = $value['id'];
