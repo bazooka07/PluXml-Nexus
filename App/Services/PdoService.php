@@ -16,6 +16,7 @@ class PdoService
     {
         $this->pdo = new \PDO('mysql:host=' . DB_HOST . ';port=' . DB_PORT . ';dbname=' . DB_DBNAME . ';charset=' . DB_CHARSET, DB_USER, DB_PASSWORD);
         $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $this->pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
     }
 
     /**
@@ -27,7 +28,7 @@ class PdoService
     {
         $req = $this->pdo->prepare($sql);
         $req->execute();
-        return $req->fetchAll(\PDO::FETCH_ASSOC);
+        return $req->fetchAll();
     }
 
     /**

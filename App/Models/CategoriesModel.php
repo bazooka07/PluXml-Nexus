@@ -8,14 +8,14 @@ class CategoriesModel extends Model
 {
 
     private const USED_CATEGORIES = <<< EOT
-SELECT category, count(*), c.name FROM plugins p
+SELECT c.id, count(*) as cnt, c.name FROM plugins p
     LEFT JOIN categories c ON p.category=c.id
     GROUP BY category
     ORDER BY c.name;
 EOT;
     private const ALL_CATEGORIES = <<< EOT
-SELECT
-    FROM CATEGORIES;
+SELECT id, name
+    FROM categories;
 EOT;
     public $categories;
 

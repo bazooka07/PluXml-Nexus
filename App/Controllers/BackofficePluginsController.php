@@ -61,7 +61,7 @@ class BackofficePluginsController extends BackOfficeController
             [
                 'h3' => 'Edit plugin ' . $args['name'],
                 'plugin' => PluginsFacade::getPlugin($this->container, $args['name']),
-                'categories' => CategoriesFacade::getCategories($this->container),
+                'categories' => CategoriesFacade::getCategories($this->container, true),
             ]
         );
     }
@@ -78,7 +78,7 @@ class BackofficePluginsController extends BackOfficeController
             'pages/backoffice/addPlugin.php',
             [
                 'h3' => 'New plugin',
-                'categories' => CategoriesFacade::getCategories($this->container),
+                'categories' => CategoriesFacade::getCategories($this->container, true),
             ]
         );
     }
@@ -94,7 +94,7 @@ class BackofficePluginsController extends BackOfficeController
     public function edit(Request $request, Response $response, array $args): Response
     {
         $namedRoute = self::NAMED_ROUTE_EDITPLUGIN;
- 
+
         $errors = self::ressourceValidator($request);
 
         if (empty($errors)) {

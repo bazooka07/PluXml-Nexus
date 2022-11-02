@@ -125,6 +125,7 @@ button, input[type=submit] {
     border: 0px;
     border-radius: inherit;
     background-color: var(--backbutton);
+    width: 100%;
 }
 
 button:hover, input[type=submit]:hover {

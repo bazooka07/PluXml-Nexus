@@ -4,7 +4,12 @@
         <li class="tab <?= !isset($category) ? 'activeTab' : '' ?>"><a href="<?= $routerService->urlFor('plugins') ?>">All</a></li>
 <?php foreach ($categories as $value): ?>
         <li class="tab <?= (isset($category) and $value['name'] == $category) ? 'activeTab' : '' ?>">
-            <a href="<?= $routerService->urlFor('category', ['name' => $value['name']]) ?>"><?= $value['name'] ?></a>
+            <a href="<?= $routerService->urlFor('category', ['name' => $value['name']]) ?>">
+                <?= $value['name'] ?>
+                <?php if (isset($value['cnt'])) : ?>
+                (<?= $value['cnt'] ?>)
+                <?php endif; ?>
+            </a>
         </li>
 <?php endforeach; ?>
     </ul>
