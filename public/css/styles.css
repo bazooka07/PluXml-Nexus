@@ -153,6 +153,33 @@ footer {
     border-bottom: 2px solid #cdcdcd;
 }
 
+.theme input[type="checkbox"] {
+    display: none;
+}
+
+.theme .overlay {
+    text-align: center;
+}
+
+.theme input:checked + div {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    padding-top: 50vh;
+    background-color: #888;
+    z-index: 99;
+}
+
+.theme input:checked + div label {
+    width: max-content;
+    margin: 0 auto;
+    padding: 0;
+    transform: translateY(-50%);
+    cursor: zoom-in;
+}
+
 @media screen and (max-width: 600px) {
     .page {
         padding: 10px;

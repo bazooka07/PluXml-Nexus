@@ -1,5 +1,5 @@
 <?php foreach ($plugins as $plugin): ?>
-    <div class="col sml-12 med-3 panel">
+    <div class="col sml-12 med-3 panel plugin">
         <a href="<?= $routerService->urlFor('plugin', ['name' => $plugin['name']]) ?>">
             <div class="panel-content">
                 <span class="panel-header text-center">
