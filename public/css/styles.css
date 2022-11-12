@@ -31,6 +31,9 @@ h1 {
     margin: 0px;
 }
 
+button {
+    max-width: 20rem;
+}
 .grid {
     margin: 0px;
 }
@@ -151,6 +154,54 @@ footer {
     height: 43px;
     background-color: #333;
     border-bottom: 2px solid #cdcdcd;
+}
+
+.scrollable-table {
+    padding-bottom: 0.5rem;
+}
+
+.scrollable-table table {
+  min-width: 100%;
+}
+
+.col > h3 {
+    margin: 0;
+}
+
+.ressource .grid {
+  margin: 3rem 0 1.5rem;
+}
+
+.ressource td:nth-of-type(2) {
+  min-width: 40rem;
+}
+
+.ressource td:nth-of-type(3),
+.ressource td:nth-of-type(4) {
+  text-align: center;
+}
+
+.tab, .breadcrumb, h2, h3, th, nav, button {
+    text-transform: capitalize;
+}
+
+.breadcrumb .profile {
+	text-transform: none;
+}
+
+.menu.breadcrumb {
+	margin: 2rem 0 0;
+	padding: 0.5rem 1rem;
+}
+
+h3 {
+	margin: 1.5rem 0;
+	padding: 0.5rem 1rem;
+}
+
+.panel-content a.ressource {
+    display: block;
+    text-align: center;
 }
 
 @media screen and (max-width: 600px) {

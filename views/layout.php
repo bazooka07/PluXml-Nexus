@@ -1,6 +1,5 @@
-<!doctype html>
-<html lang="fr">
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
 <!--[if IE]>
@@ -35,51 +34,42 @@ foreach([ 16, 32, 96, ] as $size) {
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/fontello/css/fontello.css">
 </head>
-
 <body>
+    <div id="plxnav" data-title="Ressources" data-logo="purple" data-link="nexus"></div>
+    <header class="header" role="banner">
+        <div class="container">
+            <div class="grid">
+                <div class="col sml-12 med-8">
+                    <nav class="nav" role="navigation">
+                        <ul class="inline-list">
+                            <li><a href="<?= $routerService->urlFor('homepage') ?>"><h1><?= _['RESSOURCES'] ?></h1></a></li>
+                            <li><a href="<?= $routerService->urlFor('profiles') ?>"><?= _['CONTRIBUTORS'] ?></a></li>
+                        </ul>
+                    </nav>
+                </div>
 
-<div id="plxnav" data-title="Ressources" data-logo="purple" data-link="nexus"></div>
-
-<header class="header" role="banner">
-    <div class="container">
-        <div class="grid">
-            <div class="col sml-12 med-8">
-                <nav class="nav" role="navigation">
-                    <ul class="inline-list">
-                        <li><a href="<?= $routerService->urlFor('homepage') ?>"><h1>Ressources</h1></a></li>
-                        <li><a href="<?= $routerService->urlFor('profiles') ?>">Contributors</a></li>
-                    </ul>
-                </nav>
-            </div>
-
-            <div class="col sml-12 med-4">
-                <nav class="nav text-right" role="navigation">
-                    <ul class="inline-list">
-                        <?php if (!$isLogged): ?>
-                            <li><a href="<?= $routerService->urlFor('signup') ?>">Sign up</a></li>
-                            <li><a href="<?= $routerService->urlFor('auth') ?>">Log in</a></li>
-                        <?php else: ?>
-                            <li><a href="<?= $routerService->urlFor('backoffice') ?>"><?= $_SESSION['user'] ?></a></li>
-                            <li><a href="<?= $routerService->urlFor('logoutAction') ?>">Log out</a></li>
-                        <?php endif; ?>
-                    </ul>
-                </nav>
+                <div class="col sml-12 med-4">
+                    <nav class="nav text-right" role="navigation">
+                        <ul class="inline-list">
+<?php if (!$isLogged): ?>
+                                <li><a href="<?= $routerService->urlFor('signup') ?>"><?= _['SIGN_UP'] ?></a></li>
+                                <li><a href="<?= $routerService->urlFor('auth') ?>"><?= _['LOG_IN'] ?></a></li>
+<?php else: ?>
+                                <li><a href="<?= $routerService->urlFor('backoffice') ?>"><?= $_SESSION['user'] ?></a></li>
+                                <li><a href="<?= $routerService->urlFor('logoutAction') ?>"><?= _['LOG_OUT'] ?></a></li>
+<?php endif; ?>
+                        </ul>
+                    </nav>
+                </div>
             </div>
         </div>
-    </div>
-</header>
-
-<main id="main" role="main" class="main">
-    <div class="container">
-        <?= $content ?>
-    </div>
-</main>
-
-<footer>
-    PluXml - Blog ou Cms à l'Xml !
-    <!-- script src="https://medias.pluxml.org/navigation/nav.js"></script -->
-</footer>
-
+    </header>
+    <main id="main" role="main" class="main">
+        <div class="container">
+<?= $content ?>
+        </div>
+    </main>
+    <footer>PluXml - Blog ou Cms à l'Xml !</footer>
+    <script src="https://medias.pluxml.org/navigation/nav.js"></script>
 </body>
-
 </html>

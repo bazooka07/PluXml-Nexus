@@ -39,7 +39,7 @@ class BackofficeController extends Controller
     public function render(Response $response, $filename, $datas = [])
     {
         $datas['title'] = (!empty($this->ressourceType) ? ucfirst($this->ressourceType) . 's' : 'Backoffice') . ' Ressources - PluXml.org';
-        $datas['h2'] = 'Backoffice';
+        $datas['h2'] = _['BACKOFFICE'];
         $datas['adminUser'] = AuthFacade::isAdmin($this->container, $this->currentUser);
 
         return parent::render($response,

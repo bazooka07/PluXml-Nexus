@@ -77,7 +77,7 @@ class BackofficePluginsController extends BackOfficeController
         return $this->render($response,
             'pages/backoffice/addPlugin.php',
             [
-                'h3' => 'New plugin',
+                'h3' => _['NEW_PLUGIN'],
                 'categories' => CategoriesFacade::getCategories($this->container, true),
             ]
         );

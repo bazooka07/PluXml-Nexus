@@ -78,7 +78,11 @@ class AuthFacade extends Facade
      */
     static public function sendConfirmationEmail(ContainerInterface $container, string $username)
     {
-        $userModel = UsersFacade::searchUser($container, $username);
+        $userModel = UsersFacade::searchUserWithValidToken($container, $username, true);
+
+        if ($userModel === null) {
+            return false;
+        }
 
         $host = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
         $tokenHref = $container->get('router')->urlFor('confirmEmail') . "?username=$userModel->username&token=$userModel->token";
@@ -108,6 +112,7 @@ class AuthFacade extends Facade
      */
     static public function confirmEmail(ContainerInterface $container, string $username, string $token): bool
     {
+        /*
         $result = FALSE;
 
         $userModel = UsersFacade::searchUser($container, $username);
@@ -121,8 +126,9 @@ class AuthFacade extends Facade
                 $result = TRUE;
             }
         }
+        * */
 
-        return $result;
+        return usersModel::confirmEmail($username, $token);
     }
 
     /**

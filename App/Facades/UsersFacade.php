@@ -27,6 +27,8 @@ class UsersFacade
     {
         $usersModel = new UsersModel($container, $filter);
         return [
+            'title' => ucfirst(_['CONTRIBUTORS']),
+            'h2' => _['CONTRIBUTORS'],
             'profiles'    => $usersModel->users,
             'expireCount' => $usersModel->expireCount(),
         ];
@@ -59,6 +61,12 @@ class UsersFacade
         if ($asContributor) {
             $datas['plugins'] = self::getPluginsByProfile($container, $userModel->id);
             $datas['themes'] = self::getThemesByProfile($container, $userModel->id);
+            if (isset($_SESSION['role']) and $_SESSION['role'] == 'admin')
+            {
+                if (preg_match('#/backoffice/users$#', $_SERVER['HTTP_REFERER'])) {
+                    $datas['frombackoffice'] = true;
+                }
+            }
         }
 
         return $datas;
@@ -70,14 +78,13 @@ class UsersFacade
      * @param string $search
      * @return UserModel
      */
-    static public function searchUser(ContainerInterface $container, string $search): ?UserModel
+    static public function searchUser(ContainerInterface $container, string $username, bool $all=false): ?UserModel
     {
-        $userModel = NULL;
         $userModels = new UsersModel($container);
 
         // Search userid by the username
-        $rows = array_filter($userModels->users, function($userInfos) use($search) {
-            return ($userInfos['username'] === $search and empty($userInfos['token']));
+        $rows = array_filter($userModels->users, function($userInfos) use($username, $all) {
+            return ($userInfos['username'] === $username and ($all or empty($userInfos['token'])));
         });
 
         if(count($rows) !== 1) {
@@ -85,6 +92,23 @@ class UsersFacade
         }
 
         return new UserModel($container, array_values($rows)[0]['id']);
+    }
+
+    /**
+     *
+     * @param ContainerInterface $container
+     * @param string $search
+     * @return UserModel
+     */
+    static public function searchUserWithValidToken(ContainerInterface $container, string $username): ?UserModel
+    {
+        $rows = UsersModel::searchUserWithValidToken($username);
+        if(count($rows) !== 1)
+        {
+            return null;
+        }
+
+        return new UserModel(array_values($rows)[0]);
     }
 
     /**
@@ -126,8 +150,8 @@ class UsersFacade
      */
     static public function removeExpire(ContainerInterface $container): bool
     {
-        $usersModel = new UsersModel($container, $hadPlugins);
-        return $usersModel->expire();
+        $usersModel = new UsersModel($container);
+        return $usersModel->deleteExpire();
     }
 
     /**

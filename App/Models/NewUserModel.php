@@ -18,23 +18,15 @@ class NewUserModel extends Model
 
     private $website;
 
-    private $token;
-
-    private $tokenExpire;
-
     public function __construct(ContainerInterface $container, array $user)
     {
         parent::__construct($container);
 
         $this->username = $user['username'];
-        $this->userid = $user['userid'];
+        $this->userid = isset($user['userid']) ? $user['userid'] : '';
         # $this->password = self::encryptPassword($user['password']);
         $this->email = $user['email'];
-        $this->website = $user['website'];
-
-        $token = parent::generateToken();
-        $this->token = $token['token'];
-        $this->tokenExpire = $token['expire'];
+        $this->website = isset($user['website']) ? $user['website'] : '';
     }
 
     /**
@@ -43,11 +35,32 @@ class NewUserModel extends Model
      */
     public function saveNewUser()
     {
-        return $this->pdoService->insert("INSERT INTO users SET username = '$this->username', password = '$this->password', email = '$this->email', website = '$this->website', role = '', token = '$this->token', tokenexpire = '$this->tokenExpire'");
+
+        $newToken = parent::generateToken();
+        $token = $newToken['token'];
+        $expire = $newToken['expire'];
+
+        $query = <<< EOT
+INSERT INTO users SET
+    username = '$this->username',
+    password = '$this->password',
+    email = '$this->email',
+    website = '$this->website',
+    token = '$token',
+    tokenexpire = '$expire';
+EOT;
+        return $this->pdoService->insert($query);
     }
 
     public function updateUser()
     {
-        return $this->pdoService->insert("UPDATE users SET email = '$this->email', website = '$this->website' WHERE id = '$this->userid'");
+        # checks if empty($this->userid) ?
+        $query = <<< EOT
+UPDATE users SET
+    email='$this->email',
+    website = '$this->website'
+    WHERE id = '$this->userid';
+EOT;
+        return $this->pdoService->insert($query);
     }
 }

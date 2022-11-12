@@ -2,8 +2,8 @@
 <?php
 foreach([
     'homepage' => ['PluXml', 1],
-    'plugins'  => ['Plugins', 3],
-    'themes'   => ['Themes', 2],
+    'plugins'  => [_['PLUGINS'], 3],
+    'themes'   => [_['THEMES'], 2],
 ] as $url=>$infos) {
 ?>
     <div class="col sml-12 med-4">

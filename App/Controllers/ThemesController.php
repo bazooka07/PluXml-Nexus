@@ -19,7 +19,7 @@ class ThemesController extends Controller
      */
     public function show(Request $request, Response $response)
     {
-        return $this->render($response, 
+        return $this->render($response,
             'pages/themes.php',
             [
                 'activeTab' => 2,

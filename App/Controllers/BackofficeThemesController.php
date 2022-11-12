@@ -37,7 +37,7 @@ class BackofficeThemesController extends BackofficeController
         return $this->render($response,
             'pages/backoffice/themes.php',
             [
-                'h3' => 'Themes',
+                'h3' => _['THEMES'],
                 'themes' => ThemesFacade::getAllThemes($this->container, $this->currentUserId),
             ]
         );

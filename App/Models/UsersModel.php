@@ -65,19 +65,57 @@ EOT;
             case UsersFilter::Contributors: $query = self::SELECT_CONTRIBUTORS; break;
             case UsersFilter::HasThemes: $query = self::SELECT_WITH_THEMES; break;
             case UsersFilter::ItemsCount: $query = self::SELECT_ITEMS_COUNT; break;
+            case UsersFilter::NoUsers : break;
             default: $query = self::SELECT_ALL;
         }
-        $this->users = $this->pdoService->query($query);
+        $this->users = isset($query) ? $this->pdoService->query($query) : [];
     }
 
     public function deleteExpire()
     {
-        return $this->pdoService->query(self::DELETE_EXPIRE);
+        $result = $this->pdoService->query(self::DELETE_EXPIRE);
+        return $result;
     }
 
     public function expireCount()
     {
         $rows = $this->pdoService->query(self::EXPIRE_COUNT); # retourne un tableau de 1 rangée !!!!
         return $rows ? $rows[0]['cnt'] : 0;
+    }
+
+    public function searchUserWithValidToken(String $username)
+    {
+        $query = <<< EOT
+SELECT id,username,email FROM users
+    WHERE username = '$username'
+    AND token IS NOT NULL
+    AND tokenexpire > NOW();
+EOT;
+        return $this->pdoService->query($query);
+    }
+
+    public function confirmEmail(String $username, String $token)
+    {
+        $query = <<< EOT
+SELECT id FROM users
+    WHERE username = '$username'
+    and token = '$token'
+    and tokenexpire > now();
+EOT;
+        $result = $this->pdoService->query($query);
+        if (count($result) !== 1) {
+            return false;
+        }
+
+        $id = array_values($result)['id'];
+        $query = <<< EOT
+UPDATE users SET
+    token = NULL,
+    tokenexpire = NULL,
+    role = 'user'
+    WHERE id = $id;
+EOT;
+        $result = $this->pdoService->query($query);
+        return true;
     }
 }

@@ -1,27 +1,17 @@
 <div class="content">
     <div class="page">
         <h2><?= $h2 ?></h2>
-        <p>
-            <a href="<?= $routerService->urlFor('backoffice') ?>">Backoffice</a>&nbsp;/&nbsp;
-            New theme
-        </p>
+        <ul class="menu breadcrumb">
+            <li><a href="<?= $routerService->urlFor('backoffice') ?>">Backoffice</a></li>
+            <li>New theme</li>
+        </ul>
         <h3><?= $h3 ?></h3>
-
-        <?php if (isset($flash['success'])): ?>
-            <div class="alert green">
-                <?= $flash['success'][0] ?>
-            </div>
-        <?php elseif (isset($flash['error'])): ?>
-            <div class="alert red">
-                <?= $flash['error'][0] ?>
-            </div>
-        <?php endif; ?>
-
+<?php include 'flash.php'; ?>
         <div class="alert blue">
             <small>
                 <strong>Warning</strong>
                 <ul>
-                    <li>The theme name must be unique</li>
+                    <li>The theme name must be unique by user</li>
                     <li>The uploaded file must be a "zip" archive</li>
                     <li>The uploaded file will be renamed with the theme name</li>
                 </ul>

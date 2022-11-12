@@ -1,5 +1,5 @@
 <?php foreach ($plugins as $plugin): ?>
-    <div class="col sml-12 med-3 panel">
+    <div class="col sml-12 med-3 panel plugin">
         <a href="<?= $routerService->urlFor('plugin', ['name' => $plugin['name']]) ?>">
             <div class="panel-content">
                 <span class="panel-header text-center">
@@ -19,7 +19,7 @@
                     <li><i class="icon-leaf"></i>PluXml version <?= $plugin['pluxml'] ?></li>
                 </ul>
                 <a href=" <?= $plugin['file'] ?>">
-                    <button><i class="icon-download"></i>Download</button>
+                    <button><i class="icon-download"></i><?= _['DOWNLOAD'] ?></button>
                 </a>
             </div>
         </a>

@@ -2,17 +2,7 @@
     <div class="page">
         <div class="auth">
             <h3>Log in</h3>
-
-            <?php if (isset($flash['success'])): ?>
-                <div class="alert green">
-                    <?= $flash['success'][0] ?>
-                </div>
-            <?php elseif (isset($flash['error'])): ?>
-                <div class="alert red">
-                    <?= $flash['error'][0] ?>
-                </div>
-            <?php endif; ?>
-
+<?php include 'flash.php'; ?>
             <form action="<?= $routerService->urlFor('loginAction') ?>" method="post">
                 <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
                 <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">

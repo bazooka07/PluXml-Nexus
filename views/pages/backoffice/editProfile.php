@@ -1,22 +1,11 @@
 <div class="content">
     <div class="page">
-        <h2><?= $h2 ?></h2>
-        <p>
-            <a href="<?= $routerService->urlFor('backoffice') ?>">Backoffice</a>&nbsp;/&nbsp;
-            My profile
-        </p>
+        <ul class="menu breadcrumb">
+            <li><a href="<?= $routerService->urlFor('backoffice') ?>"><?= $h2 ?> . </a></li>
+            <li>My profile</li>
+        </ul>
         <h3><?= $h3 ?></h3>
-
-        <?php if (isset($flash['success'])): ?>
-            <div class="alert green">
-                <?= $flash['success'][0] ?>
-            </div>
-        <?php elseif (isset($flash['error'])): ?>
-            <div class="alert red">
-                <?= $flash['error'][0] ?>
-            </div>
-        <?php endif; ?>
-
+<?php include 'flash.php'; ?>
         <form action="<?= $routerService->urlFor('profileSaveAction') ?>" method="post">
             <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
             <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">

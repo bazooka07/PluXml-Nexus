@@ -25,11 +25,11 @@ class BackofficeUsersController extends BackofficeController
      */
     public function showUsers(Request $request, Response $response): Response
     {
-        $datas = [];
-
         if (AuthFacade::isAdmin($this->container, $this->currentUser)) {
-            $datas['h3'] = 'Users';
-            $datas = array_merge($datas, UsersFacade::getAllProfilesWithItemsCount($this->container));
+            $datas = UsersFacade::getAllProfilesWithItemsCount($this->container);
+            $datas['h3'] = _['USERS'];
+        } else {
+            $datas = [];
         }
 
         return $this->render($response, self::VIEW_BO_USERS, $datas);

@@ -20,8 +20,8 @@ class ProfilesController extends Controller
      */
     public function show(Request $request, Response $response)
     {
-        return $this->render($response, 
-            'pages/profiles.php', 
+        return $this->render($response,
+            'pages/profiles.php',
             UsersFacade::getAllProfiles($this->container, UsersFilter::Contributors)
         );
     }
@@ -35,8 +35,8 @@ class ProfilesController extends Controller
      */
     public function showProfile(Request $request, Response $response, $args)
     {
-        return $this->render($response, 
-            'pages/profile.php', 
+        return $this->render($response,
+            'pages/profile.php',
             UsersFacade::getProfile($this->container, $args['username'], true)
         );
     }

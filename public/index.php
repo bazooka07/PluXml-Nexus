@@ -16,6 +16,8 @@ session_start();
 // NEXUS application global settings
 require_once '../config/settings.php';
 
+require_once '../App/Translations/fr.php';
+
 function reverseDate($input) {
     return implode('/', array_reverse(explode('-', $input)));
 }
