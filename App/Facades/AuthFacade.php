@@ -6,6 +6,7 @@
 namespace App\Facades;
 
 use App\Models\UserModel;
+use App\Models\UsersModel;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -112,23 +113,7 @@ class AuthFacade extends Facade
      */
     static public function confirmEmail(ContainerInterface $container, string $username, string $token): bool
     {
-        /*
-        $result = FALSE;
-
-        $userModel = UsersFacade::searchUser($container, $username);
-
-        if (isset($userModel->token) and isset($userModel->tokenExpire)) {
-            if ($userModel->token == $token and $userModel->tokenExpire >= date('Y-m-d H:i:s')) {
-                $userModel->role = 'user';
-                $userModel->token = NULL;
-                $userModel->tokenExpire = NULL;
-                $userModel->editUser();
-                $result = TRUE;
-            }
-        }
-        * */
-
-        return usersModel::confirmEmail($username, $token);
+        return UsersModel::confirmEmail($container, $username, $token);
     }
 
     /**
@@ -138,17 +123,13 @@ class AuthFacade extends Facade
      */
     static public function sendNewPasswordEmail(ContainerInterface $container, string $username): bool
     {
-        $result = FALSE;
-
+        # vérifier que $userModel->token est vide
         $userModel = UsersFacade::searchUser($container, $username);
 
-        if (isset($userModel->id)) {
-            $token = $userModel->generateToken();
-            $userModel->token = $token['token'];
-            $userModel->tokenExpire = $token['expire'];
-            if ($userModel->editUser()) {
+        if (!empty($userModel->id)) {
+            if ($userModel->editUser(true)) {
                 $host = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
-                $tokenHref = $container->get('router')->urlFor('resetPassword') . "?token=$userModel->token";
+                $tokenHref = $container->get('router')->urlFor('resetPassword') . '?token=' . $userModel->token;
                 $placeholder = [
                     '##USERNAME##' => $userModel->username,
                     '##HREF##'  => $host,
@@ -178,14 +159,14 @@ class AuthFacade extends Facade
      */
     static public function confirmLostPasswordToken(ContainerInterface $container, string $token): bool
     {
-        $result = false;
         if (isset($token)) {
-            $userModel = UsersFacade::searchUser($container, $token);
-            if (isset($userModel)) {
-                $result = true;
+            $userModel = new UserModel($container, $token);
+            if (!empty($userModel->id)) {
+                return true;
             }
         }
-        return $result;
+
+        return false;
     }
 
     /**
@@ -196,20 +177,13 @@ class AuthFacade extends Facade
      */
     static public function resetPassword(ContainerInterface $container, string $username, string $password): bool
     {
-        $result = FALSE;
+        $userModel = UsersFacade::searchUser($container, $username, true);
 
-        $userModel = UsersFacade::searchUser($container, $username);
-
-        if (isset($userModel->token) and isset($userModel->tokenExpire)) {
-            if ($userModel->tokenExpire >= date('Y-m-d H:i:s')) {
-                $userModel->token = NULL;
-                $userModel->tokenExpire = '0000-00-00 00:00:00';
-                $userModel->password = password_hash($password, PASSWORD_BCRYPT);
-                $userModel->editUser();
-                $result = TRUE;
-            }
+        if (!empty($userModel->id)) {
+            $userModel->password = $password;
+            return $userModel->editUser();
         }
 
-        return $result;
+        return false;
     }
 }

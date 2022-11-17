@@ -31,7 +31,7 @@ $app->get('/profiles/{username}', ProfilesController::class . ':showProfile')->s
 $app->get('/auth', AuthController::class . ':showAuth')->setName('auth');
 $app->get('/signup', AuthController::class . ':showSignup')->setName('signup');
 $app->get('/auth/lostpassword', AuthController::class . ':showLostPassword')->setName('lostPassword');
-$app->get('/auth/resetpassword', AuthController::class . ':showResetPassword');
+$app->get('/auth/resetpassword', AuthController::class . ':showResetPassword')->setName('resetPassword');
 $app->get('/auth/emailconfirmation', AuthController::class . ':confirmEmail')->setName('confirmEmail');
 $app->get('/auth/logout', AuthController::class . ':logout')->setName('logoutAction');
 $app->post('/auth/login', AuthController::class . ':login')->setName('loginAction');

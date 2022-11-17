@@ -15,7 +15,6 @@ class BackofficeThemesController extends BackofficeController
 {
 
     private const NAMED_ROUTE_BOTHEMES = 'bothemes';
-
     private const NAMED_ROUTE_SAVETHEME = 'boaddtheme';
 
     public function __construct(ContainerInterface $container)

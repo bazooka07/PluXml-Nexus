@@ -27,7 +27,7 @@ class PdoService
     public function query(String $sql)
     {
         $req = $this->pdo->prepare($sql);
-        $req->execute();
+        $status = $req->execute();
         return $req->fetchAll();
     }
 
@@ -50,6 +50,6 @@ class PdoService
     public function delete(String $sql)
     {
         $req = $this->pdo->prepare($sql);
-        return $req->execute();
+        return $req->execute() !== 0;
     }
 }

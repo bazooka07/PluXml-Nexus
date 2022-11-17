@@ -9,11 +9,18 @@ use App\Models\UsersFilter;
 
 class UsersModel extends Model
 {
-    const DELETE_EXPIRE         = 'DELETE from users WHERE token != "" AND tokenexpire < now() AND role != \'admin\';';
+    const DELETE_EXPIRE         = <<< EOT
+DELETE from users
+    WHERE token != ''
+    AND tokenexpire < now()
+    AND role is NULL;
+EOT;
     const EXPIRE_COUNT          = <<< EOT
 SELECT count(*) AS cnt
     FROM users
-    WHERE token != "" AND tokenexpire<now() AND role!= 'admin';
+    WHERE token != ''
+    AND tokenexpire < now()
+    AND role is NULL;
 EOT;
     const SELECT_ALL            = <<< EOT
 SELECT id,username,email,website,role,token,tokenexpire
@@ -73,8 +80,7 @@ EOT;
 
     public function deleteExpire()
     {
-        $result = $this->pdoService->query(self::DELETE_EXPIRE);
-        return $result;
+        return $this->pdoService->delete(self::DELETE_EXPIRE);
     }
 
     public function expireCount()
@@ -83,6 +89,7 @@ EOT;
         return $rows ? $rows[0]['cnt'] : 0;
     }
 
+/*
     public function searchUserWithValidToken(String $username)
     {
         $query = <<< EOT
@@ -93,29 +100,21 @@ SELECT id,username,email FROM users
 EOT;
         return $this->pdoService->query($query);
     }
+ * */
 
-    public function confirmEmail(String $username, String $token)
+    public static function confirmEmail(ContainerInterface $container, String $username, String $token)
     {
-        $query = <<< EOT
-SELECT id FROM users
-    WHERE username = '$username'
-    and token = '$token'
-    and tokenexpire > now();
-EOT;
-        $result = $this->pdoService->query($query);
-        if (count($result) !== 1) {
-            return false;
-        }
+        $pdoService = $container->get('pdo');
 
-        $id = array_values($result)['id'];
         $query = <<< EOT
 UPDATE users SET
     token = NULL,
     tokenexpire = NULL,
     role = 'user'
-    WHERE id = $id;
+    WHERE username = '$username'
+    AND token = '$token'
+    AND tokenexpire > now();
 EOT;
-        $result = $this->pdoService->query($query);
-        return true;
+        return $pdoService->delete($query);
     }
 }

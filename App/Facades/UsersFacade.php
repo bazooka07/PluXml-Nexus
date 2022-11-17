@@ -75,11 +75,36 @@ class UsersFacade
     /**
      *
      * @param ContainerInterface $container
+     * @param string $username
+     * @param bool $withPlugins add user's plugins name to the view datas
+     * @return array $datas
+     */
+    static public function getProfileByToken(ContainerInterface $container, string $token): array
+    {
+        $userModel = new UserModel($container, $token);
+
+        if(!empty($userModel->id)) {
+            return [
+                'title' => "Profile $userModel->username Ressources - PluXml.org",
+                'username' => $userModel->username,
+                'userid' => $userModel->id,
+                'email' => $userModel->email,
+                'website' => $userModel->website,
+            ];
+        }
+
+        return false;
+    }
+
+    /**
+     *
+     * @param ContainerInterface $container
      * @param string $search
      * @return UserModel
      */
     static public function searchUser(ContainerInterface $container, string $username, bool $all=false): ?UserModel
     {
+/*
         $userModels = new UsersModel($container);
 
         // Search userid by the username
@@ -92,6 +117,14 @@ class UsersFacade
         }
 
         return new UserModel($container, array_values($rows)[0]['id']);
+*/
+        $userModel = new UserModel($container, $username, '', $all);
+
+        if(empty($userModel->id)) {
+            return NULL;
+        }
+
+        return $userModel;
     }
 
     /**
@@ -102,13 +135,8 @@ class UsersFacade
      */
     static public function searchUserWithValidToken(ContainerInterface $container, string $username): ?UserModel
     {
-        $rows = UsersModel::searchUserWithValidToken($username);
-        if(count($rows) !== 1)
-        {
-            return null;
-        }
 
-        return new UserModel(array_values($rows)[0]);
+        return new UserModel($container, $username, '', true);
     }
 
     /**
@@ -177,4 +205,5 @@ class UsersFacade
         $themesModel = new ThemesModel($container, $userid);
         return isset($themesModel) ? ThemesFacade::populateThemesList($container, $themesModel) : null;
     }
+
 }

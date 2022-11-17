@@ -24,7 +24,7 @@ class NewUserModel extends Model
 
         $this->username = $user['username'];
         $this->userid = isset($user['userid']) ? $user['userid'] : '';
-        # $this->password = self::encryptPassword($user['password']);
+        $this->password = isset($user['password']) ? self::encryptPassword($user['password']) : '';
         $this->email = $user['email'];
         $this->website = isset($user['website']) ? $user['website'] : '';
     }
@@ -36,9 +36,9 @@ class NewUserModel extends Model
     public function saveNewUser()
     {
 
-        $newToken = parent::generateToken();
-        $token = $newToken['token'];
-        $expire = $newToken['expire'];
+        $token = parent::generateToken();
+        # https://mariadb.com/kb/en/date_add/
+        $lifetime = AUTH_SIGNUP_LIFETIME;
 
         $query = <<< EOT
 INSERT INTO users SET
@@ -47,7 +47,7 @@ INSERT INTO users SET
     email = '$this->email',
     website = '$this->website',
     token = '$token',
-    tokenexpire = '$expire';
+    tokenexpire = DATE_ADD(NOW(), INTERVAL $lifetime HOUR)
 EOT;
         return $this->pdoService->insert($query);
     }

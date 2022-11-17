@@ -23,6 +23,7 @@ class BackofficeController extends Controller
     protected const VIEW_BO = 'pages/backoffice/backoffice.php';
 
     private String $view = self::VIEW_BO;
+    protected String $title = _['BACKOFFICE'];
     protected String $ressourceType = '';
     protected String $dirTarget = '';
     protected Array $post = [];
@@ -38,7 +39,7 @@ class BackofficeController extends Controller
      */
     public function render(Response $response, $filename, $datas = [])
     {
-        $datas['title'] = (!empty($this->ressourceType) ? ucfirst($this->ressourceType) . 's' : 'Backoffice') . ' Ressources - PluXml.org';
+        $datas['title'] = (!empty($this->ressourceType) ? ucfirst(_[$this->ressourceType . 's']) : _['BACKOFFICE']) . ' - Ressources.pluXml.org';
         $datas['h2'] = _['BACKOFFICE'];
         $datas['adminUser'] = AuthFacade::isAdmin($this->container, $this->currentUser);
 

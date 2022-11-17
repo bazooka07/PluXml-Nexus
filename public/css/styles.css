@@ -107,7 +107,7 @@ button {
 
 .panel-header {
     display: block;
-    background-color: var(--backheader);
+    /* background-color: var(--backheader); */
 }
 
 .panel-header i {

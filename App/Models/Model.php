@@ -9,7 +9,8 @@ use Psr\Container\ContainerInterface;
 class Model
 {
     private const PATTERN = '0123456789azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN';
-    private const TOKEN_LENGTH = 60;
+    private const PATTERN_REPEAT = 3;
+    protected const TOKEN_LENGTH = 60;
 
     protected $pdoService;
 
@@ -27,17 +28,18 @@ class Model
      */
     public function generateToken()
     {
-
-        return [
-            'token'  => substr(str_shuffle(str_repeat(self::PATTERN, self::TOKEN_LENGTH)), 0, self::TOKEN_LENGTH),
-            'expire' => date('Y-m-d H:i:s', time() + AUTH_SIGNUP_LIFETIME * 3600),
-        ];
+        $max = strlen(self::PATTERN) * self::PATTERN_REPEAT;
+        return substr(
+            str_shuffle(str_repeat(self::PATTERN, self::PATTERN_REPEAT)),
+            mt_rand(0, $max - self::TOKEN_LENGTH),
+            self::TOKEN_LENGTH
+        );
     }
 
     /**
      * @encrypted password
      */
-    protected function encryptPassword(String $password) 
+    protected function encryptPassword(String $password)
     {
         return password_hash($password, PASSWORD_BCRYPT);
     }

@@ -110,16 +110,19 @@ class AuthController extends Controller
     {
         $params = $request->getQueryParams();
 
-        $result = AuthFacade::confirmLostPasswordToken($this->container, $params['token']);
-
-        if ($result) {
-            $datas['user'] = UsersFacade::getProfile($this->container, $params['token']);
-            $response = $this->render($response, self::PAGE_RESETPASSWORD, $datas);
-        } else {
-            $response = $this->render($response, self::PAGE_AUTH);
+        # tester si !empty($params['token']) et
+        # ensuite UsersFacade::getProfile(...)
+        if(!empty($params['token'])) {
+            $profil = UsersFacade::getProfileByToken($this->container, $params['token']);
+            if(!empty($profil['userid'])) {
+                $datas = [
+                    'user' => $profil,
+                ];
+                return $this->render($response, self::PAGE_RESETPASSWORD, $datas);
+            }
         }
 
-        return $response;
+        return $this->render($response, self::PAGE_AUTH);
     }
 
     /**

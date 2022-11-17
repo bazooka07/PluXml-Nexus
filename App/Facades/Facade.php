@@ -14,7 +14,7 @@ class Facade
     static public function getAuthorUsernameById(ContainerInterface $container, Int $id)
     {
         $userModel = new UserModel($container, $id);
-        return $userModel->username;
+        return !empty($userModel->id) ? $userModel->username : null;
     }
 
     /**

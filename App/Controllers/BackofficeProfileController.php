@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Facades\UsersFacade;
+use App\Controllers\BackofficeController;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Respect\Validation\Validator;
@@ -11,7 +12,7 @@ use Respect\Validation\Validator;
  * Class BackofficeProfileController
  * @package App\Controllers
  */
-class BackofficeProfileController extends Controller
+class BackofficeProfileController extends BackOfficeController
 {
 
     private const MSG_SUCCESS_EDITPROFILE = 'Profile updated with success.';
@@ -26,10 +27,8 @@ class BackofficeProfileController extends Controller
      */
     public function showEditProfile(Request $request, Response $response)
     {
-        $datas['title'] = 'Backoffice Ressources - PluXml.org';
-        $datas['h2'] = 'Backoffice';
-        $datas['h3'] = 'My profile';
-        $datas = array_merge($datas, UsersFacade::getProfile($this->container, $this->currentUser));
+        $datas = UsersFacade::getProfile($this->container, $this->currentUser);
+        $datas['h3'] = _['MY_PROFILE'];
 
         return $this->render($response, 'pages/backoffice/editProfile.php', $datas);
     }
