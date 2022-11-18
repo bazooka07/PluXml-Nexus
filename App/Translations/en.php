@@ -1,4 +1,14 @@
 <?php
+
+const MAIL_NEWUSER_SUBJECT = 'Welcome to PluXml Nexus';
+
+const MAIL_NEWUSER_BODY = <<< EOT
+<p>Hello ##USERNAME##,</p>
+<p>To complete your signup and be able to login to <a href="##HREF##">##HREF##</a>, please confirm your email address by clicking the link below :</p>
+<p><a href="##LINK##">##LINK##</a></p>
+<p>This link will expire in ##HOURS##H.</p>
+EOT;
+
 const  _ = array(
 	'BACKOFFICE'	=> 'Backoffice',
 	'WARNING'	=> 'Warning',

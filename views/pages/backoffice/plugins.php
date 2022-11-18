@@ -22,7 +22,7 @@
                         <th><?= _['DESCRIPTION'] ?></th>
                         <th><?= _['VERSION'] ?></th>
                         <th><?= _['PLUXML'] ?></th>
-                        <TH><?= _['WEBSITE'] ?></TH>
+                        <th><?= _['WEBSITE'] ?></th>
                         <th><?= _['ACTION'] ?></th>
                     </tr>
                 </thead>

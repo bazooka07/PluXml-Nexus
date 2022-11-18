@@ -15,10 +15,6 @@ use Respect\Validation\Validator;
 class BackofficeProfileController extends BackOfficeController
 {
 
-    private const MSG_SUCCESS_EDITPROFILE = 'Profile updated with success.';
-
-    private const MSG_ERROR_EDITPROFILE = 'Profile can not be updated, see errors below.';
-
     /**
      *
      * @param Request $request
@@ -49,13 +45,13 @@ class BackofficeProfileController extends BackOfficeController
 
         if (empty($errors)) {
             if (UsersFacade::editUser($this->container, $post)) {
-                $this->messageService->addMessage('success', self::MSG_SUCCESS_EDITPROFILE);
+                $this->messageService->addMessage('success', _['MSG_SUCCESS_EDITPROFILE']);
                 $namedRoute = self::NAMED_ROUTE_BACKOFFICE;
             } else {
                 $this->messageService->addMessage('error', self::MSG_ERROR_TECHNICAL);
             }
         } else {
-            $this->messageService->addMessage('error', self::MSG_ERROR_EDITPROFILE);
+            $this->messageService->addMessage('error', _['MSG_ERROR_EDITPROFILE']);
             foreach ($errors as $key => $message) {
                 $this->messageService->addMessage($key, $message);
             }

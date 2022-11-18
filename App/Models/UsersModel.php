@@ -27,7 +27,7 @@ SELECT id,username,email,website,role,token,tokenexpire
     FROM users
     ORDER BY username;
 EOT;
-    const SELECT_CONTRIBUTORS = <<< EOT
+    const SELECT_CONTRIBUTORS   = <<< EOT
 SELECT id,username,email,website,role
     FROM users
     WHERE
@@ -36,9 +36,7 @@ SELECT id,username,email,website,role
         id IN (SELECT DISTINCT author FROM themes)
     ORDER BY username;
 EOT;
-
-# select id,username from users where id in (select distinct author from plugins) or id in (select distinct author from themes) order by username;
-    const SELECT_WITH_PLUGINS = <<< EOT
+    const SELECT_WITH_PLUGINS =   <<< EOT
 SELECT id,username,email,website,role,token,tokenexpire,count(b.id) as plugins
     FROM users a, plugins b
     WHERE users.token ='' AND users.id = b.author
@@ -88,19 +86,6 @@ EOT;
         $rows = $this->pdoService->query(self::EXPIRE_COUNT); # retourne un tableau de 1 rangée !!!!
         return $rows ? $rows[0]['cnt'] : 0;
     }
-
-/*
-    public function searchUserWithValidToken(String $username)
-    {
-        $query = <<< EOT
-SELECT id,username,email FROM users
-    WHERE username = '$username'
-    AND token IS NOT NULL
-    AND tokenexpire > NOW();
-EOT;
-        return $this->pdoService->query($query);
-    }
- * */
 
     public static function confirmEmail(ContainerInterface $container, String $username, String $token)
     {

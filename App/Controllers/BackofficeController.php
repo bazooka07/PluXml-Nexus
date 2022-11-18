@@ -12,13 +12,13 @@ use Respect\Validation\Validator;
 class BackofficeController extends Controller
 {
 
-    protected const MSG_VALID_NAME = 'Must be alphanumeric with no whitespace';
-    protected const MSG_VALID_TOLONG1000 = 'Invalid or to long (1000 characters max)';
-    protected const MSG_VALID_TOLONG100 = 'Invalid or to long (100 characters max)';
-    protected const MSG_VALID_FILE = 'Invalid zip archive file or more big than 10MB';
-    protected const MSG_SUCCESS_EDITRESSOURCE = '%s saved with success';
-    protected const MSG_SUCCESS_DELETERESSOURCE = '%s deleted with success';
-    protected const MSG_ERROR_TECHNICAL_RESSOURCES = 'Technical error or %s name already exist';
+    protected const MSG_VALID_NAME = _['MSG_VALID_NAME'];
+    protected const MSG_VALID_TOLONG1000 = _['MSG_VALID_TOLONG1000'];
+    protected const MSG_VALID_TOLONG100 = _['MSG_VALID_TOLONG100'];
+    protected const MSG_VALID_FILE = _['MSG_VALID_FILE'];
+    protected const MSG_SUCCESS_EDITRESSOURCE = _['MSG_SUCCESS_EDITRESSOURCE'];
+    protected const MSG_SUCCESS_DELETERESSOURCE = _['MSG_SUCCESS_DELETERESSOURCE'];
+    protected const MSG_ERROR_TECHNICAL_RESSOURCES = _['MSG_ERROR_TECHNICAL_RESSOURCES'];
 
     protected const VIEW_BO = 'pages/backoffice/backoffice.php';
 
@@ -39,7 +39,7 @@ class BackofficeController extends Controller
      */
     public function render(Response $response, $filename, $datas = [])
     {
-        $datas['title'] = (!empty($this->ressourceType) ? ucfirst(_[$this->ressourceType . 's']) : _['BACKOFFICE']) . ' - Ressources.pluXml.org';
+        $datas['title'] = (!empty($this->ressourceType) ? ucfirst(_[strtoupper($this->ressourceType . 's')]) : _['BACKOFFICE']) . ' - Ressources.pluXml.org';
         $datas['h2'] = _['BACKOFFICE'];
         $datas['adminUser'] = AuthFacade::isAdmin($this->container, $this->currentUser);
 

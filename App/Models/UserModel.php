@@ -15,7 +15,6 @@ class UserModel extends Model
     public $website;
     public $role;
     public $token;
-    public $tokenExpire;
 
     public function __construct(ContainerInterface $container, String $id, String $password='', bool $validToken=false)
     {
@@ -99,7 +98,7 @@ EOT;
     {
         $query = <<< EOT
 UPDATE users SET
-    lastconnected = now()
+    lastconnected = NOW()
     WHERE id = '$this->id';
 EOT;
         return $this->pdoService->insert($query);

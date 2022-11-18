@@ -5,8 +5,11 @@
 		<li><?= _['USERS'] ?></li>
 	</ul>
         <h3><?= $h3 ?></h3>
-<?php include 'flash.php'; ?>
-<?php if (!empty($profiles)): ?>
+<?php
+include 'flash.php';
+
+if (!empty($profiles)):
+?>
             <div class="scrollable-table">
                 <table>
                     <thead>
@@ -24,7 +27,10 @@
 <?php foreach ($profiles as $key => $profile): ?>
                         <tr>
                             <td>
-<?php if(empty($profile['token'])): ?>
+<?php
+$cnt = $profile['plugins_cnt'] + $profile['themes_cnt'];
+if(empty($profile['token']) and $cnt > 0):
+?>
                                 <a href="<?= $routerService->urlFor('profile', ['username' => $profile['username']]) ?>"><?= $profile['username'] ?></a>
 <?php else : ?>
                                 <span><?= $profile['username'] ?></span>
@@ -38,7 +44,7 @@
                             <td>
 <?php if ($profile['role'] == 'admin') : ?>
     admin
-<?php elseif($profile['plugins_cnt'] + $profile['themes_cnt'] > 0) : ?>
+<?php elseif($cnt > 0) : ?>
     user
 <?php else : ?>
                                 <a onclick="confirmModal('<?= $profile['username'] ?>', '<?= $routerService->urlFor('bormuser', ['userid' => $profile['id']]) ?>', 'user')"><i class="icon-trash"></i></a>
@@ -49,7 +55,9 @@
                     </tbody>
                 </table>
             </div>
-<?php if ($expireCount > 0) : ?>
+<?php
+    if ($expireCount > 0) :
+?>
             <div class="grid">
                 <div class="col med-6 lrg-4">
                     <?= $expireCount ?> <?= _['INVALIDATE_USERS'] ?>
@@ -59,10 +67,14 @@
                 </div>
 
             </div>
-<?php endif; ?>
-<?php else: ?>
+<?php
+    endif;
+else:
+?>
             <p><?= _['NO_USERS_FOUND'] ?></p>
-<?php endif; ?>
+<?php
+endif;
+?>
     </div>
 </div>
 <script src="/js/confirmModal.js"></script>
