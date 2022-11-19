@@ -28,7 +28,7 @@ class PluginsController extends Controller
             [
                 'activeTab' => self::ACTIVE_TAB,
                 'categories' => CategoriesFacade::getCategories($this->container),
-                'plugins' => PluginsFacade::getAllPlugins($this->container),
+                'plugins' => PluginsFacade::getAllItem($this->container),
             ]
         );
     }
@@ -66,7 +66,7 @@ class PluginsController extends Controller
             self::VIEW_PLUGIN,
             [
                 'activeTab' => self::ACTIVE_TAB,
-                'plugin' => PluginsFacade::getPlugin($this->container, $args['name']),
+                'plugin' => PluginsFacade::getItem($this->container, $args['name'], $args['author']),
             ]
         );
     }

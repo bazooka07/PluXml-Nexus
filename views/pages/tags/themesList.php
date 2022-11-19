@@ -1,25 +1,26 @@
-<?php foreach ($themes as $theme): ?>
-    <div class="col sml-12 med-3 panel theme">
+<?php foreach ($themes as $item): ?>
+    <div class="col sml-12 med-3 panel item">
         <div class="panel-content">
-            <a class="ressource" href="<?= $routerService->urlFor('theme', ['name' => $theme['name']]) ?>">
-<?php if (!empty($theme['media'])) : ?>
-                <img src="<?= $theme['media'] ?>" />
+            <a class="ressource" href="<?= $routerService->urlFor('theme', $item) ?>">
+                <span class="panel-header text-center">
+<?php if (!empty($item['media'])) : ?>
+                <img src="<?= $item['media'] ?>" />
 <?php endif; ?>
-                <strong><?= $theme['name'] ?></strong>
+                </span>
+                <strong><?= $item['name'] ?></strong>
             </a>
             <ul class="unstyled-list">
-<?php if(!isset($username)) : ?>
-                <li><i class="icon-user"></i><em><a href="<?= $routerService->urlFor('profile', ['username' => $theme['username']]) ?>"><?= $theme['username'] ?></a></em></li>
+                <li><?= $item['description'] ?></li>
+                <li><i class="icon-user"></i><em><a href="<?= $routerService->urlFor('profile', $item) ?>"><?= $item['username'] ?></a></em></li>
+                <li><i class="icon-tag"></i>Date : <?= $item['date'] ?></li>
+<?php if(!empty($item['version'])) : ?>
+                <li><i class="icon-tag"></i>Version : <?= $item['version'] ?></li>
 <?php endif; ?>
-                <li><i class="icon-tag"></i>Date : <?= $theme['date'] ?></li>
-<?php if(!empty($theme['version'])) : ?>
-                <li><i class="icon-tag"></i>Version : <?= $theme['version'] ?></li>
-<?php endif; ?>
-<?php if(!empty($theme['pluxml'])) : ?>
-                <li><i class="icon-leaf"></i>PluXml version <?= $theme['pluxml'] ?></li>
+<?php if(!empty($item['pluxml'])) : ?>
+                <li><i class="icon-leaf"></i>PluXml version <?= $item['pluxml'] ?></li>
 <?php endif; ?>
             </ul>
-            <a href=" <?= $theme['file'] ?>" download>
+            <a href=" <?= $item['file'] ?>" download>
                 <button><i class="icon-download"></i><?= _['DOWNLOAD'] ?></button>
             </a>
         </div>

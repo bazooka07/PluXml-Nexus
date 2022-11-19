@@ -26,9 +26,8 @@ class CategoriesFacade extends Facade
 
     static public function getPluginsForCategory(ContainerInterface $container, string $categoryName)
     {
-        $categoryModel = self::getCategoryIdFromName($container, $categoryName);
-        $pluginsModel = new PluginsModel($container, null, $categoryModel->id);
-        return PluginsFacade::populatePluginsList($container, $pluginsModel);
+        $pluginsModel = new PluginsModel($container, null, null, $categoryName);
+        return PluginsFacade::populate($container, $pluginsModel);
     }
 
     /**

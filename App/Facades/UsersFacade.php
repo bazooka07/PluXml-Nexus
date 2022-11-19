@@ -191,7 +191,7 @@ class UsersFacade
     static private function getPluginsByProfile(ContainerInterface $container, string $userid): ?array
     {
         $pluginsModel = new PluginsModel($container, $userid);
-        return isset($pluginsModel) ? PluginsFacade::populatePluginsList($container, $pluginsModel) : null;
+        return isset($pluginsModel) ? PluginsFacade::populate($container, $pluginsModel) : null;
     }
 
     /**
@@ -203,7 +203,7 @@ class UsersFacade
     static private function getThemesByProfile(ContainerInterface $container, string $userid): ?array
     {
         $themesModel = new ThemesModel($container, $userid);
-        return isset($themesModel) ? ThemesFacade::populateThemesList($container, $themesModel) : null;
+        return isset($themesModel) ? ThemesFacade::populate($container, $themesModel) : null;
     }
 
 }

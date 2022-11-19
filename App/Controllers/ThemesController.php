@@ -23,7 +23,7 @@ class ThemesController extends Controller
             'pages/themes.php',
             [
                 'activeTab' => 2,
-                'themes' => ThemesFacade::getAllThemes($this->container),
+                'themes' => ThemesFacade::getAllItem($this->container),
             ]
         );
     }
@@ -39,7 +39,7 @@ class ThemesController extends Controller
     {
         return $this->render($response,
             'pages/theme.php',
-            ThemesFacade::getTheme($this->container, $args['name'])
+            ThemesFacade::getItem($this->container, $args['name'], $args['author'])
         );
     }
 }

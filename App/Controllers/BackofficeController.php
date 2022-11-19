@@ -21,6 +21,7 @@ class BackofficeController extends Controller
     protected const MSG_ERROR_TECHNICAL_RESSOURCES = _['MSG_ERROR_TECHNICAL_RESSOURCES'];
 
     protected const VIEW_BO = 'pages/backoffice/backoffice.php';
+    protected const RESSOURCE = '';
 
     private String $view = self::VIEW_BO;
     protected String $title = _['BACKOFFICE'];

@@ -14,12 +14,11 @@ use App\Facades\PluginsFacade;
  * Class BackofficePluginsController
  * @package App\Controllers
  */
-class BackofficePluginsController extends BackOfficeController
+class BackofficePluginsController extends BackofficeController
 {
 
     private const NAMED_ROUTE_BOPLUGINS = 'boplugins';
-    private const NAMED_ROUTE_SAVEPLUGIN = 'boaddplugin';
-    private const NAMED_ROUTE_EDITPLUGIN = 'boeditplugin';
+    protected const RESSOURCE = 'plugin';
 
     public function __construct(ContainerInterface $container)
     {
@@ -35,13 +34,13 @@ class BackofficePluginsController extends BackOfficeController
      * @param Response $response
      * @return ResponseInterface Response
      */
-    public function show(Request $request, Response $response) : Response
+    public function show(Request $request, Response $response): Response
     {
         return $this->render($response,
-            'pages/backoffice/plugins.php', # view
+            'pages/backoffice/plugins.php',
             [
                 'h3' => 'Plugins',
-                'plugins' => PluginsFacade::getAllPlugins($this->container, $this->currentUser),
+                'plugins' => PluginsFacade::getAllItem($this->container, $this->currentUserId),
             ]
         );
     }
@@ -60,7 +59,7 @@ class BackofficePluginsController extends BackOfficeController
             'pages/backoffice/editPlugin.php',
             [
                 'h3' => 'Edit plugin ' . $args['name'],
-                'plugin' => PluginsFacade::getPlugin($this->container, $args['name']),
+                'plugin' => PluginsFacade::getItem($this->container, $args['author'], $args['name']),
                 'categories' => CategoriesFacade::getCategories($this->container, true),
             ]
         );
@@ -93,7 +92,7 @@ class BackofficePluginsController extends BackOfficeController
      */
     public function edit(Request $request, Response $response, array $args): Response
     {
-        $namedRoute = self::NAMED_ROUTE_EDITPLUGIN;
+        $namedRoute = 'boedit' . $this->ressource;
 
         $errors = self::ressourceValidator($request);
 
@@ -122,13 +121,13 @@ class BackofficePluginsController extends BackOfficeController
      */
     public function save(Request $request, Response $response): Response
     {
-        $namedRoute = self::NAMED_ROUTE_SAVEPLUGIN;
+        $namedRoute = 'boadd' . $this->ressource;
 
         $post = $request->getParsedBody();
         $errors = self::ressourceValidator($request, true);
 
         // Validator error and plugin does not exist
-        if (empty($errors) && empty(PluginsFacade::getPlugin($this->container, $post['name']))) {
+        if (empty($errors) && empty(PluginsFacade::getItem($this->container, $post['name']))) {
             if (PluginsFacade::savePlugin($this->container, $post)) {
                 $this->messageService->addMessage('success', sprintf(self::MSG_SUCCESS_EDITRESSOURCE, $this->ressourceType));
                 $namedRoute = self::NAMED_ROUTE_BOPLUGINS;

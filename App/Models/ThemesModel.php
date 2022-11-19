@@ -10,22 +10,30 @@ use Psr\Container\ContainerInterface;
  */
 class ThemesModel extends Model
 {
-    private const SELECT_ALL = <<< EOT
-SELECT t.id,name,description,author,DATE_FORMAT(date, '%d/%m/%y') as date,version,pluxml,file,link,media,u.username
-    FROM themes t
+    private const SELECT = <<< EOT
+SELECT a.id,a.name,description,author,DATE_FORMAT(date, '%d/%m/%y') as date,version,pluxml,file,link,media,downloads,u.username
+    FROM themes a
     LEFT JOIN users u ON author=u.id
+    ##WHERE##
     ORDER BY name,date desc,username;
 EOT;
     public $themes;
 
-    public function __construct(ContainerInterface $container, string $userid = NULL)
+    public function __construct(ContainerInterface $container, int $author=NULL, String $name=NULL)
     {
         parent::__construct($container);
 
-        if (!empty($userid)) {
-            $this->themes = $this->pdoService->query("SELECT * FROM themes WHERE author='$userid' order by date,name");
+        if (!empty($author)) {
+            # every theme from this author
+            $where = "WHERE author='$author'";
+            if(!empty($name)) {
+                # just one theme from this author and this name of theme
+                $where .= " AND a.name='$name'";
+            }
         } else {
-            $this->themes = $this->pdoService->query(self::SELECT_ALL);
+            $where = '';
         }
+
+        $this->themes = $this->pdoService->query(str_replace('##WHERE##', $where, self::SELECT));
     }
 }

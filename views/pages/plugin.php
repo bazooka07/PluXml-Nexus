@@ -5,7 +5,7 @@
         <h2>Plugin <?= $plugin['name'] ?></h2>
         <p>
             <i class="icon-user"></i>
-            <em><a href="<?= $routerService->urlFor('profile', ['username' => $plugin['author']]) ?>"><?= $plugin['author'] ?></a></em>
+            <em><a href="<?= $routerService->urlFor('profile', ['username' => $plugin['author']]) ?>"><?= $plugin['username'] ?></a></em>
             <i class="icon-link-1"></i>
             <em><a href="<?= $plugin['link'] ?>"><?= $plugin['link'] ?></a></em>
             <i class="<?= $plugin['categoryIcon'] ?>"></i>

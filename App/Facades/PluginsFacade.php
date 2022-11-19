@@ -20,108 +20,89 @@ class PluginsFacade extends Facade
      *
      * @param ContainerInterface $container
      * @param string|null $username
+     * @param int $author
      * @return array
      */
-    static public function getAllPlugins(ContainerInterface $container, string $username = NULL)
+    static public function getAllItem(ContainerInterface $container, int $author= NULL)
     {
-        if (isset($username)) {
-            $userModel = UsersFacade::searchUser($container, $username);
-            $pluginsModel = new PluginsModel($container, $userModel->id);
-        } else {
-            $pluginsModel = new PluginsModel($container);
-        }
-
-        return self::populatePluginsList($container, $pluginsModel);
+        $collection = new PluginsModel($container, $author);
+        return self::populate($container, $collection);
     }
 
     /**
      * @param ContainerInterface $container
      * @param String $name
+     * @param int $author
      * @return mixed
      */
-    static public function getPlugin(ContainerInterface $container, string $name)
+    static public function getItem(ContainerInterface $container, String $name, int $author)
     {
-        $pluginModel = new PluginModel($container, $name);
+        $item = new PluginModel($container, $name, $author);
 
-        if (empty($pluginModel->name)) {
-            return false;
+        if (!empty($item->id)) {
+            return [
+                'id' => $item->id,
+                'title' => "Plugin $item->name Ressources - PluXml.org",
+                'name' => $item->name,
+                'description' => $item->description,
+                'version' => $item->version,
+                'pluxml' => $item->pluxml,
+                'date' => $item->date,
+                'link' => $item->link,
+                'file' => $item->file,
+                'media' => $item->media,
+                'author' => $item->author,
+                'username' => $item->username,
+                'category' => $item->category,
+                'categoryName' => $item->categoryName,
+                'categoryIcon' => $item->categoryIcon,
+            ];
         }
 
-        $category = CategoriesFacade::getPluginCategory($container, $pluginModel->category);
-        return [
-            'id' => $pluginModel->id,
-            'title' => "Plugin $pluginModel->name Ressources - PluXml.org",
-            'name' => $pluginModel->name,
-            'description' => $pluginModel->description,
-            'version' => $pluginModel->version,
-            'pluxml' => $pluginModel->pluxml,
-            'link' => $pluginModel->link,
-            'file' => $pluginModel->file,
-            'media' => $pluginModel->media,
-            'author' => Facade::getAuthorUsernameById($container, $pluginModel->author),
-            'category' => $category->id,
-            'categoryName' => $category->name,
-            'categoryIcon' => $category->icon,
-        ];
+        return false;
     }
 
     /**
      *
      * @param ContainerInterface $container
-     * @param array $plugin
+     * @param array $datas
      * @return bool
      */
-    static public function editPlugin(ContainerInterface $container, array $plugin)
+    static public function editPlugin(ContainerInterface $container, array $datas)
     {
-        $newPluginModel = new NewPluginModel($container, $plugin);
-        return $newPluginModel->updatePlugin();
+        $newItem = new NewPluginModel($container, $datas);
+        return $newItem->updatePlugin();
     }
 
     /**
      * @param ContainerInterface $container
-     * @param array $plugin
+     * @param array $datas
      * @return bool
      */
-    static public function savePlugin(ContainerInterface $container, array $plugin)
+    static public function savePlugin(ContainerInterface $container, array $datas)
     {
-        $newPluginModel = new NewPluginModel($container, $plugin);
-        return $newPluginModel->saveNewPlugin();
+        $newItem = new NewPluginModel($container, $datas);
+        return $newItem->saveNewPlugin();
     }
 
     /**
      * @param ContainerInterface $container
+     * @param int $author id
      * @param string $name
      * @return bool
      */
-    static public function deletePlugin(ContainerInterface $container, string $name)
+    static public function deletePlugin(ContainerInterface $container, int $author, string $name)
     {
-        $pluginModel = new PluginModel($container, $name);
-        $pluginModel->delete($container, $name) != false;
-        return unlink(PUBLIC_DIR . DIR_PLUGINS . DIRECTORY_SEPARATOR . $name . '.zip'); # !!! dans model
+        $item = new PluginModel($container, $author, $name);
+        return $item->delete();
     }
 
-    static public function populatePluginsList(ContainerInterface $container, PluginsModel $pluginsModel)
+    static public function populate(ContainerInterface $container, PluginsModel $collection)
     {
-        $plugins = [];
-
-        if (!empty($pluginsModel)) {
-            foreach ($pluginsModel->plugins as $key => $value) {
-                $plugins[] = [
-                    'id' => $value['id'],
-                    'name' => $value['name'],
-                    'description' => $value['description'],
-                    'author' => Facade::getAuthorUsernameById($container, $value['author']),
-                    'version' => $value['version'],
-                    'pluxml' => $value['pluxml'],
-                    'link' => $value['link'],
-                    'file' => $value['file'],
-                    'media' => $value['media'],
-                    'categoryName' => CategoriesFacade::getPluginCategory($container, $value['category'])->name,
-                    'categoryIcon' => CategoriesFacade::getPluginCategory($container, $value['category'])->icon,
-                ];
-            }
+        if (!empty($collection->plugins)) {
+            return $collection->plugins;
         }
 
-        return $plugins;
+        return [];
     }
 }

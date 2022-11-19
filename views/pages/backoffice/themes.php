@@ -30,14 +30,14 @@
 <?php foreach ($themes as $key => $theme): ?>
                     <tr>
                         <td>
-                            <a href="<?= $routerService->urlFor('theme', ['name' => $theme['name']]) ?>"><?= $theme['name'] ?></a>
+                            <a href="<?= $routerService->urlFor('theme', $theme) ?>"><?= $theme['name'] ?></a>
                         </td>
                         <td><?= $theme['description'] ?></td>
                         <td><?= $theme['version'] ?></td>
                         <td><?= $theme['pluxml'] ?></td>
                         <td><a href="<?= $theme['link'] ?>"><?= $theme['link'] ?></a></td>
                         <td>
-                            <a href="<?= $routerService->urlFor('boedittheme', ['name' => $theme['name']]) ?>" title="<?= _['EDIT'] ?>"><i
+                            <a href="<?= $routerService->urlFor('boedittheme', $theme) ?>" title="<?= _['EDIT'] ?>"><i
                                         class="icon-pencil"></i></a>
                             <a href="<?= $theme['file'] ?>" title="<?= _['DOWNLOAD'] ?>" download><i class="icon-download"></i></a>
                         </td>

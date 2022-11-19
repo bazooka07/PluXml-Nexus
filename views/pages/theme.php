@@ -15,6 +15,6 @@
 	<li><?= $description ?></li>
 	<li><?= $version ?></li>
 	<li><?= $pluxml ?></li>
-	<li><?= $author ?></li>
+	<li><?= $username ?></li>
 	<li><a href="<?= $link ?>" target="_blank"><?= $link ?></a></li>
 </ul>

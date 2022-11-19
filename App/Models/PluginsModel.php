@@ -10,21 +10,34 @@ use Psr\Container\ContainerInterface;
  */
 class PluginsModel extends Model
 {
+    private const SELECT = <<< EOT
+SELECT a.id,a.name,description,author,DATE_FORMAT(date, '%d/%m/%y') as date,version,pluxml,file,link,media,downloads,u.username,category,c.name as categoryName,c.icon as categoryIcon
+    FROM plugins a
+    LEFT JOIN users u ON author=u.id
+    LEFT JOIN categories c on a.category=c.id
+    ##WHERE##
+    ORDER BY name,date desc,username;
+EOT;
 
     public $plugins;
 
-    public function __construct(ContainerInterface $container, string $userid = NULL, int $categoryId = NULL)
+    public function __construct(ContainerInterface $container, int $author=NULL, String $name=NULL, String $categoryName=NULL)
     {
         parent::__construct($container);
 
-        if (!empty($userid)) {
-            $where = "WHERE author='$userid'";
-        } else if (!empty($categoryId)) {
-            $where = "WHERE category='$categoryId'";
+        if (!empty($author)) {
+            # every plugin from this author
+            $where = "WHERE a.author='$author'";
+            if(!empty($name)) {
+                # just one plugin from this author and this name of plugin
+                $where .= " AND a.name='$name'";
+            }
+        } else if (!empty($categoryName)) {
+            $where = "WHERE c.name='$categoryName'";
         } else {
             $where = '';
         }
 
-        $this->plugins = $this->pdoService->query('SELECT * FROM plugins ' . $where . ' order by name,date;');
+        $this->plugins = $this->pdoService->query(str_replace('##WHERE##', $where, self::SELECT));
     }
 }

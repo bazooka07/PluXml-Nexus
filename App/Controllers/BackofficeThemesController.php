@@ -25,11 +25,11 @@ class BackofficeThemesController extends BackofficeController
         $this->mediaName = 'preview';
     }
 
-   /**
+    /**
      *
      * @param Request $request
      * @param Response $response
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return ResponseInterface Response
      */
     public function show(Request $request, Response $response): Response
     {
@@ -37,7 +37,7 @@ class BackofficeThemesController extends BackofficeController
             'pages/backoffice/themes.php',
             [
                 'h3' => _['THEMES'],
-                'themes' => ThemesFacade::getAllThemes($this->container, $this->currentUserId),
+                'themes' => ThemesFacade::getAllItem($this->container, $this->currentUserId),
             ]
         );
     }
@@ -55,7 +55,7 @@ class BackofficeThemesController extends BackofficeController
             'pages/backoffice/editTheme.php',
             [
                 'h3' => 'Edit theme ' . $args['name'],
-                'theme' => ThemesFacade::getTheme($this->container, $args['name']),
+                'theme' => ThemesFacade::getItem($this->container, $args['name'], $args['author']),
             ]
         );
     }
@@ -118,7 +118,7 @@ class BackofficeThemesController extends BackofficeController
         $errors = self::ressourceValidator($request, true);
 
         // Validator error and theme does not exist
-        if (empty($errors) && empty(ThemesFacade::getTheme($this->container, $this->post['name']))) {
+        if (empty($errors) && empty(ThemesFacade::getItem($this->container, $this->post['name']))) {
             if (ThemesFacade::saveTheme($this->container, $this->post)) {
                 $this->messageService->addMessage('success', sprintf(self::MSG_SUCCESS_EDITRESSOURCE, $this->ressourceType));
                 $namedRoute = self::NAMED_ROUTE_BOTHEMES;

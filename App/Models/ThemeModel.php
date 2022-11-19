@@ -10,50 +10,48 @@ class ThemeModel extends Model
 {
 
     public $name;
-
     public $description;
-
     public $author;
-
     public $date;
-
-    public $versionTheme;
-
-    public $versionPluxml;
-
+    public $version;
+    public $pluxml;
     public $link;
-
     public $file;
+    public $media;
+    public $username;
 
-    public function __construct(ContainerInterface $container, String $name)
+    public function __construct(ContainerInterface $container, String $name, int $author)
     {
         parent::__construct($container);
 
-        $pdo = $this->pdoService->query("SELECT * FROM themes WHERE name = '$name'");
-
-        if (!empty($pdo))
+        $themesModel = new ThemesModel($container, $author, $name);
+        if (count($themesModel->themes) == 1)
         {
-            $this->id = $pdo[0]['id'];
-            $this->name = $pdo[0]['name'];
-            $this->description = $pdo[0]['description'];
-            $this->author = $pdo[0]['author'];
-            $this->date = $pdo[0]['date'];
-            $this->version = $pdo[0]['version'];
-            $this->pluxml = $pdo[0]['pluxml'];
-            $this->link = $pdo[0]['link'];
-            $this->file = $pdo[0]['file'];
-            $this->media = $pdo[0]['media'];
+            $row = array_values($themesModel->themes)[0];
+            $this->id = $row['id'];
+            $this->name = $row['name'];
+            $this->description = $row['description'];
+            $this->author = $row['author'];
+            $this->date = $row['date'];
+            $this->version = $row['version'];
+            $this->pluxml = $row['pluxml'];
+            $this->link = $row['link'];
+            $this->file = $row['file'];
+            $this->media = $row['media'];
+            $this->username = $row['username'];
         }
     }
 
-    /**
-     *
-     * @param ContainerInterface $container
-     * @param string $name
-     * @return bool
-     */
-    public function delete(ContainerInterface $container, string $name)
+    public function delete()
     {
-        return $this->pdoService->delete("DELETE FROM themes WHERE name = '$name'");
+        foreach(array($this->file, $this->media) as $f) {
+            if(!empty($f)) {
+                $filename = PUBLIC_DIR . $f;
+                if(file_exists($filename)) {
+                    unlink($filename);
+                }
+            }
+        }
+        return $this->pdoService->delete('DELETE FROM themes WHERE id = '. $this->id . ';');
     }
 }

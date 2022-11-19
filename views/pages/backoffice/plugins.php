@@ -29,15 +29,13 @@
                 <tbody>
 <?php foreach ($plugins as $key => $plugin): ?>
                     <tr>
-                        <td>
-                            <a href="<?= $routerService->urlFor('plugin', ['name' => $plugin['name']]) ?>"><?= $plugin['name'] ?></a>
-                        </td>
+			<td><a href="<?= $routerService->urlFor('plugin', $plugin) ?>"><?= $plugin['name'] ?></a></td>
                         <td><?= $plugin['description'] ?></td>
                         <td><?= $plugin['version'] ?></td>
                         <td><?= $plugin['pluxml'] ?></td>
                         <td><a href="<?= $plugin['link'] ?>" target="_blank"><?= $plugin['link'] ?></a></td>
                         <td>
-                            <a href="<?= $routerService->urlFor('boeditplugin', ['name' => $plugin['name']]) ?>" title="<?= _['EDIT'] ?>"><i
+                            <a href="<?= $routerService->urlFor('boeditplugin', $plugin) ?>" title="<?= _['EDIT'] ?>"><i
                                         class="icon-pencil"></i></a>
                             <a href="<?= $plugin['file'] ?>" title="<?= _['DOWNLOAD'] ?>" download><i class="icon-download"></i></a>
                         </td>

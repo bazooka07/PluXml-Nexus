@@ -20,10 +20,10 @@ $app->get('/', HomeController::class . ':show')->setName('homepage');
 
 $app->get('/plugins/categories/{name}', PluginsController::class . ':showCategory')->setName('category');
 $app->get('/plugins', PluginsController::class . ':show')->setName('plugins');
-$app->get('/plugins/{name}', PluginsController::class . ':showPlugin')->setName('plugin');
+$app->get('/plugins/{author}/{name}', PluginsController::class . ':showPlugin')->setName('plugin');
 
 $app->get('/themes', ThemesController::class . ':show')->setName('themes');
-$app->get('/themes/{name}', ThemesController::class . ':showTheme')->setName('theme');
+$app->get('/themes/{author}/{name}', ThemesController::class . ':showTheme')->setName('theme');
 
 $app->get('/profiles', ProfilesController::class . ':show')->setName('profiles');
 $app->get('/profiles/{username}', ProfilesController::class . ':showProfile')->setName('profile');
@@ -43,10 +43,10 @@ $app->group('/backoffice', function (RouteCollectorProxyInterface $group) {
 
     $group->get('', BackofficeController::class . ':show')->setName('backoffice');
     $group->get('/plugins', BackofficePluginsController::class . ':show')->setName('boplugins');
-    $group->get('/plugins/{name}', BackofficePluginsController::class . ':showPlugin')->setName('boeditplugin');
+    $group->get('/plugins/{author}/{name}', BackofficePluginsController::class . ':showPlugin')->setName('boeditplugin');
     $group->get('/plugin/add', BackofficePluginsController::class . ':showAddPlugin')->setName('boaddplugin');
     $group->get('/themes', BackofficeThemesController::class . ':show')->setName('bothemes');
-    $group->get('/themes/{name}', BackofficeThemesController::class . ':showTheme')->setName('boedittheme');
+    $group->get('/themes/{author}/{name}', BackofficeThemesController::class . ':showTheme')->setName('boedittheme');
     $group->get('/theme/add', BackofficeThemesController::class . ':showAddTheme')->setName('boaddtheme');
     $group->get('/profile', BackofficeProfileController::class . ':showEditProfile')->setName('boeditprofile');
     $group->get('/users', BackofficeUsersController::class . ':showUsers')->setName('bousers');
