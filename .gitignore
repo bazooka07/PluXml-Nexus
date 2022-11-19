@@ -1,13 +1,13 @@
 /config/settings.php
 /composer.lock
 /vendor/
-/public/datas/tmp/
-/public/datas/plugins/
-/public/datas/themes/
+/public/datas/
 .idea/
 .buildpath
 .project
 .settings/
 .vscode/
 *.bak
+# for vim
+*.swp
 
