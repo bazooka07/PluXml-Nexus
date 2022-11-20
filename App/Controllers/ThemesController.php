@@ -10,6 +10,10 @@ use App\Facades\ThemesFacade;
 
 class ThemesController extends Controller
 {
+    protected const RESSOURCE = 'theme';  
+    private const ACTIVE_TAB = 2;
+    private const VIEW_ALL_ITEMS = 'pages/' . self::RESSOURCE . 's.php';
+    private const VIEW_ITEM = 'pages/' . self::RESSOURCE . '.php';
 
     /**
      *
@@ -17,13 +21,13 @@ class ThemesController extends Controller
      * @param Response $response
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function show(Request $request, Response $response)
+    public function showAllItems(Request $request, Response $response)
     {
         return $this->render($response,
-            'pages/themes.php',
+            self::VIEW_ALL_ITEMS,
             [
-                'activeTab' => 2,
-                'themes' => ThemesFacade::getAllItem($this->container),
+                'activeTab' => self::ACTIVE_TAB,
+                self::RESSOURCE . 's' => ThemesFacade::getAllItems($this->container),
             ]
         );
     }
@@ -35,11 +39,14 @@ class ThemesController extends Controller
      * @param Array $args
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function showTheme(Request $request, Response $response, $args)
+    public function showItem(Request $request, Response $response, $args)
     {
         return $this->render($response,
-            'pages/theme.php',
-            ThemesFacade::getItem($this->container, $args['name'], $args['author'])
+            self::VIEW_ITEM,
+            [
+                'activeTab' => self::ACTIVE_TAB,
+                self::RESSOURCE => ThemesFacade::getItem($this->container, $args['name'], $args['author']),
+            ]
         );
     }
 }

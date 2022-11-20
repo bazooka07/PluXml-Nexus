@@ -31,6 +31,7 @@ class CategoriesFacade extends Facade
     }
 
     /**
+     * Deprecated! see SQL query
      * @param ContainerInterface $container
      * @param int $categoryId
      * @return CategoryModel
@@ -40,6 +41,9 @@ class CategoriesFacade extends Facade
         return new CategoryModel($container, $categoryId);
     }
 
+    /**
+     * Deprecated! see SQL query
+     */
     static private function getCategoryIdFromName(ContainerInterface $container, string $categoryName) {
         return new CategoryModel($container, null, $categoryName);
     }

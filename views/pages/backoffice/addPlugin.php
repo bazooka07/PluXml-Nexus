@@ -3,7 +3,7 @@
         <h2><?= $h2 ?></h2>
         <ul class="menu breadcrumb">
             <li><a href="<?= $routerService->urlFor('backoffice') ?>"><?= _['BACKOFFICE'] ?></a></li>
-            <li><?= _['NEW_PLUGIN'] ?></li>
+            <li><?= _['NEW_' . strtoupper($ressource)] ?></li>
         </ul>
         <h3><?= $h3 ?></h3>
 <?php include 'flash.php'; ?>
@@ -11,14 +11,14 @@
             <small>
                 <strong><?= _['WARNING'] ?></strong>
                 <ul>
-                    <li><?= _['UNIQUE_NAME_PLUGIN'] ?></li>
+                    <li><?= _['UNIQUE_NAME_' . strtoupper($ressource)] ?></li>
                     <li><?= _['ZIP_ARCHIVE'] ?></li>
-                    <li><?= _['ZIP_RENAME_PLUGIN'] ?></li>
+                    <li><?= _['ZIP_RENAME_' . strtoupper($ressource)] ?></li>
                 </ul>
             </small>
         </div>
 
-        <form action="<?= $routerService->urlFor('pluginSaveAction') ?>" method="post" enctype="multipart/form-data">
+        <form action="<?= $routerService->urlFor($ressource . 'SaveAction') ?>" method="post" enctype="multipart/form-data">
             <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
             <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
             <input type="hidden" name="author" value="<?= $_SESSION['userid'] ?>">
@@ -34,6 +34,10 @@ $fields = array(
 );
 $requiredFields = array('name', 'file',);
 foreach($fields as $f=>$label) {
+    if ($f == 'category' and $ressource != 'plugin') {
+        continue;
+    }
+
     $required = in_array($f, $requiredFields) ? ' required' : '';
 
 ?>

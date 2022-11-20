@@ -19,7 +19,7 @@ class BackofficeController extends Controller
     protected const MSG_SUCCESS_EDITRESSOURCE = _['MSG_SUCCESS_EDITRESSOURCE'];
     protected const MSG_SUCCESS_DELETERESSOURCE = _['MSG_SUCCESS_DELETERESSOURCE'];
     protected const MSG_ERROR_TECHNICAL_RESSOURCES = _['MSG_ERROR_TECHNICAL_RESSOURCES'];
-
+    protected const MSG_ERROR_INFOS_MISSING_IN_ZIP = 'infos.xml file is missing in Zip archive';
     protected const VIEW_BO = 'pages/backoffice/backoffice.php';
     protected const RESSOURCE = '';
 
@@ -100,9 +100,11 @@ class BackofficeController extends Controller
                     if (is_dir(PUBLIC_DIR . $targetDir) or mkdir(PUBLIC_DIR . $targetDir))
                     {
                         $this->post['file'] = $targetDir . DIRECTORY_SEPARATOR . $this->post['name'] . '.zip';
-                        # tester infos.xml dans archive zip !!
                         $uploadedFile->moveTo(PUBLIC_DIR . $this->post['file']);
-                        $this->processArchiveZip($targetDir);
+                        # tester infos.xml dans archive zip !!
+                        if (!$this->processArchiveZip($targetDir)) {
+                            $errors['file'] = MSG_ERROR_INFOS_MISSING_IN_ZIP;
+                        }
                     } else {
                         $errors['file'] = MSG_ERROR_TECHNICAL_RESSOURCES;
                     }
@@ -145,12 +147,13 @@ class BackofficeController extends Controller
 
     protected function processArchiveZip($targetDir)
     {
+        $infosDone = false;
+        $mediaDone = false;
+
         $zipName = PUBLIC_DIR . $this->post['file'];
         $zip = new \ZipArchive();
         if ($zip->open($zipName))
         {
-            $infosDone = false;
-            $mediaDone = false;
             for($i=0; $i<$zip->numFiles; $i++)
             {
                 $entry = $zip->getNameIndex($i);
@@ -188,5 +191,7 @@ class BackofficeController extends Controller
                 }
             }
         }
+
+        return $infosDone;
     }
 }

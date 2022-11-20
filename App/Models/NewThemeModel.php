@@ -42,7 +42,7 @@ class NewThemeModel extends Model
      *
      * @return bool
      */
-    public function saveNewTheme()
+    public function save()
     {
         $description = addslashes($this->description);
         $query = <<< EOT
@@ -56,7 +56,7 @@ EOT;
      *
      * @return bool
      */
-    public function updateTheme()
+    public function update()
     {
         if (!empty($this->file))
         {

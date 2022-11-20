@@ -51,7 +51,7 @@ class NewPluginModel extends Model
      *
      * @return bool
      */
-    public function saveNewPlugin()
+    public function save()
     {
         $description = addslashes($this->description);
         $query = <<< EOT
@@ -65,7 +65,7 @@ EOT;
      *
      * @return bool
      */
-    public function updatePlugin()
+    public function update()
     {
         if (!empty($this->file))
         {

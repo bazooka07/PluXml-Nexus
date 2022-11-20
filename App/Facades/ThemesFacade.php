@@ -21,7 +21,7 @@ class ThemesFacade extends Facade
      * @param int $author
      * @return array
      */
-    static public function getAllItem(ContainerInterface $container, int $author= NULL)
+    static public function getAllItems(ContainerInterface $container, int $author= NULL)
     {
         $collection = new ThemesModel($container, $author);
         return self::populate($container, $collection);
@@ -63,10 +63,10 @@ class ThemesFacade extends Facade
      * @param array $datas
      * @return bool
      */
-    static public function editTheme(ContainerInterface $container, array $datas)
+    static public function editItem(ContainerInterface $container, array $datas)
     {
         $newItem = new NewThemeModel($container, $datas);
-        return $newItem->updateTheme();
+        return $newItem->update();
     }
 
     /**
@@ -74,10 +74,10 @@ class ThemesFacade extends Facade
      * @param array $datas
      * @return bool
      */
-    static public function saveTheme(ContainerInterface $container, array $datas)
+    static public function saveItem(ContainerInterface $container, array $datas)
     {
         $newItem = new NewThemeModel($container, $datas);
-        return $newItem->saveNewTheme();
+        return $newItem->save();
     }
 
     /**
@@ -86,7 +86,7 @@ class ThemesFacade extends Facade
      * @param string $name
      * @return bool
      */
-    static public function deleteTheme(ContainerInterface $container, int $author, string $name)
+    static public function deleteItem(ContainerInterface $container, int $author, string $name)
     {
         $item = new ThemeModel($container, $author, $name);
         return $item->delete();

@@ -23,7 +23,7 @@ class PluginsFacade extends Facade
      * @param int $author
      * @return array
      */
-    static public function getAllItem(ContainerInterface $container, int $author= NULL)
+    static public function getAllItems(ContainerInterface $container, int $author= NULL)
     {
         $collection = new PluginsModel($container, $author);
         return self::populate($container, $collection);
@@ -68,10 +68,10 @@ class PluginsFacade extends Facade
      * @param array $datas
      * @return bool
      */
-    static public function editPlugin(ContainerInterface $container, array $datas)
+    static public function editItem(ContainerInterface $container, array $datas)
     {
         $newItem = new NewPluginModel($container, $datas);
-        return $newItem->updatePlugin();
+        return $newItem->update();
     }
 
     /**
@@ -79,10 +79,10 @@ class PluginsFacade extends Facade
      * @param array $datas
      * @return bool
      */
-    static public function savePlugin(ContainerInterface $container, array $datas)
+    static public function saveItem(ContainerInterface $container, array $datas)
     {
         $newItem = new NewPluginModel($container, $datas);
-        return $newItem->saveNewPlugin();
+        return $newItem->save();
     }
 
     /**
@@ -91,7 +91,7 @@ class PluginsFacade extends Facade
      * @param string $name
      * @return bool
      */
-    static public function deletePlugin(ContainerInterface $container, int $author, string $name)
+    static public function deleteItem(ContainerInterface $container, int $author, string $name)
     {
         $item = new PluginModel($container, $author, $name);
         return $item->delete();

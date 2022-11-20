@@ -11,9 +11,10 @@ use App\Facades\PluginsFacade;
 
 class PluginsController extends Controller
 {
+    protected const RESSOURCE = 'plugin';  
     private const ACTIVE_TAB = 3;
-    private const VIEW_ALL = 'pages/plugins.php';
-    private const VIEW_PLUGIN = 'pages/plugin.php';
+    private const VIEW_ALL_ITEMS = 'pages/' . self::RESSOURCE . 's.php';
+    private const VIEW_ITEM = 'pages/' . self::RESSOURCE . '.php';
 
     /**
      *
@@ -21,14 +22,32 @@ class PluginsController extends Controller
      * @param Response $response
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function show(Request $request, Response $response)
+    public function showAllItems(Request $request, Response $response)
     {
         return $this->render($response,
-            self::VIEW_ALL,
+            self::VIEW_ALL_ITEMS,
             [
                 'activeTab' => self::ACTIVE_TAB,
+                self::RESSOURCE . 's' => PluginsFacade::getAllItems($this->container),
                 'categories' => CategoriesFacade::getCategories($this->container),
-                'plugins' => PluginsFacade::getAllItem($this->container),
+            ]
+        );
+    }
+
+    /**
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param Array $args
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function showItem(Request $request, Response $response, $args)
+    {
+        return $this->render($response,
+            self::VIEW_ITEM,
+            [
+                'activeTab' => self::ACTIVE_TAB,
+                self::RESSOURCE => PluginsFacade::getItem($this->container, $args['name'], $args['author']),
             ]
         );
     }
@@ -43,30 +62,12 @@ class PluginsController extends Controller
     public function showCategory(Request $request, Response $response, $args)
     {
         return $this->render($response,
-            self::VIEW_ALL,
+            self::VIEW_ALL_ITEMS,
             [
                 'activeTab' => self::ACTIVE_TAB,
                 'categories' => CategoriesFacade::getCategories($this->container),
                 'category' => $args['name'],
                 'plugins' => CategoriesFacade::getPluginsForCategory($this->container, $args['name']),
-            ]
-        );
-    }
-
-    /**
-     *
-     * @param Request $request
-     * @param Response $response
-     * @param Array $args
-     * @return \Psr\Http\Message\ResponseInterface
-     */
-    public function showPlugin(Request $request, Response $response, $args)
-    {
-        return $this->render($response,
-            self::VIEW_PLUGIN,
-            [
-                'activeTab' => self::ACTIVE_TAB,
-                'plugin' => PluginsFacade::getItem($this->container, $args['name'], $args['author']),
             ]
         );
     }

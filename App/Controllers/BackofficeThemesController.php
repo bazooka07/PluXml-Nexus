@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers;
 
 use Exception;
@@ -14,8 +15,8 @@ use App\Facades\ThemesFacade;
 class BackofficeThemesController extends BackofficeController
 {
 
-    private const NAMED_ROUTE_BOTHEMES = 'bothemes';
-    private const NAMED_ROUTE_SAVETHEME = 'boaddtheme';
+    protected const RESSOURCE = 'theme';
+    protected const NAMED_ROUTE_BO = 'bo' . self::RESSOURCE . 's';
 
     public function __construct(ContainerInterface $container)
     {
@@ -31,13 +32,14 @@ class BackofficeThemesController extends BackofficeController
      * @param Response $response
      * @return ResponseInterface Response
      */
-    public function show(Request $request, Response $response): Response
+    public function showAllItems(Request $request, Response $response): Response
     {
         return $this->render($response,
-            'pages/backoffice/themes.php',
+            'pages/backoffice/' . self::RESSOURCE .'s.php',
             [
-                'h3' => _['THEMES'],
-                'themes' => ThemesFacade::getAllItem($this->container, $this->currentUserId),
+                'h3' => _[strtoupper(self::RESSOURCE . 's')],
+                'items' => ThemesFacade::getAllItems($this->container, $this->currentUserId),
+                'ressource' => self::RESSOURCE,
             ]
         );
     }
@@ -49,13 +51,14 @@ class BackofficeThemesController extends BackofficeController
      * @param array $args
      * @return Response
      */
-    public function showTheme(Request $request, Response $response, array $args): Response
+    public function showItem(Request $request, Response $response, array $args): Response
     {
         return $this->render($response,
-            'pages/backoffice/editTheme.php',
+            'pages/backoffice/edit' . ucfirst(self::RESSOURCE) . '.php',
             [
-                'h3' => 'Edit theme ' . $args['name'],
-                'theme' => ThemesFacade::getItem($this->container, $args['name'], $args['author']),
+                'h3' => 'Edit ' . self::RESSOURCE . ' ' . $args['name'],
+                'item' => ThemesFacade::getItem($this->container, $args['name'], $args['author']),
+                'ressource' => self::RESSOURCE,
             ]
         );
     }
@@ -66,13 +69,13 @@ class BackofficeThemesController extends BackofficeController
      * @param Response $response
      * @return Response
      */
-    public function showAddTheme(Request $request, Response $response): Response
+    public function showAddItem(Request $request, Response $response): Response
     {
         return $this->render($response,
-            'pages/backoffice/addTheme.php',
+            'pages/backoffice/add' . ucfirst(self::RESSOURCE) . '.php',
             [
-                'h2' => 'Backoffice',
-                'h3' => 'New theme',
+                'h3' => _['NEW_' . strtoupper(self::RESSOURCE)],
+                'ressource' => self::RESSOURCE,
             ]
         );
     }
@@ -85,13 +88,16 @@ class BackofficeThemesController extends BackofficeController
      * @return Response
      * @throws Exception
      */
-    public function edit(Request $request, Response $response, array $args): Response
+    public function editItem(Request $request, Response $response, array $args): Response
     {
+        $namedRoute = 'boedit' . self::RESSOURCE;
+
         $errors = self::ressourceValidator($request);
 
         if (empty($errors)) {
-            if (ThemesFacade::editTheme($this->container, $this->post)) {
+            if (ThemesFacade::editItem($this->container, $this->post)) {
                 $this->messageService->addMessage('success', sprintf(self::MSG_SUCCESS_EDITRESSOURCE, $this->ressourceType));
+                $namedRoute = self::NAMED_ROUTE_BO;
             } else {
                 # Delete the ressource !!!
                 $this->messageService->addMessage('error', sprintf(self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType));
@@ -102,8 +108,9 @@ class BackofficeThemesController extends BackofficeController
             }
         }
 
-        return $this->redirect($response, self::NAMED_ROUTE_BOTHEMES, $args);
+        return $this->redirect($response, $namedRoute, $args);
     }
+
     /**
      *
      * @param Request $request
@@ -111,18 +118,18 @@ class BackofficeThemesController extends BackofficeController
      * @return Response
      * @throws Exception
      */
-    public function save(Request $request, Response $response): Response
+    public function saveItem(Request $request, Response $response): Response
     {
-        $namedRoute = self::NAMED_ROUTE_SAVETHEME;
+        $namedRoute = 'boadd' . $this->ressource;
 
         $errors = self::ressourceValidator($request, true);
-
-        // Validator error and theme does not exist
-        if (empty($errors) && empty(ThemesFacade::getItem($this->container, $this->post['name']))) {
-            if (ThemesFacade::saveTheme($this->container, $this->post)) {
+        // Validator error and the item does not exist
+        if (empty($errors) && empty(ThemesFacade::getItem($this->container, $this->post['name'], $this->post['author']))) {
+            if (ThemesFacade::saveItem($this->container, $this->post)) {
                 $this->messageService->addMessage('success', sprintf(self::MSG_SUCCESS_EDITRESSOURCE, $this->ressourceType));
-                $namedRoute = self::NAMED_ROUTE_BOTHEMES;
+                $namedRoute = self::NAMED_ROUTE_BO;
             } else {
+                # Delete the item in the database ?
                 $errors['error'] = sprintf(self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType);
             }
         } else {
@@ -145,15 +152,15 @@ class BackofficeThemesController extends BackofficeController
      * @param array $args
      * @return Response
      */
-    public function delete(Request $request, Response $response, array $args): Response
+    public function deleteItem(Request $request, Response $response, array $args): Response
     {
-        if (ThemesFacade::deleteTheme($this->container, $args['name'])) {
+        if (ThemesFacade::deleteItem($this->container, $args['author'], $args['name'])) {
             $this->messageService->addMessage('success', sprintf(self::MSG_SUCCESS_DELETERESSOURCE, $this->ressourceType));
         } else {
             $this->messageService->addMessage('error', sprintf(self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType));
         }
 
-        return $this->redirect($response, self::NAMED_ROUTE_BOTHEMES);
+        return $this->redirect($response, self::NAMED_ROUTE_BO);
     }
 
 }
