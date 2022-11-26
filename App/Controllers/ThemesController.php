@@ -45,7 +45,7 @@ class ThemesController extends Controller
             self::VIEW_ITEM,
             [
                 'activeTab' => self::ACTIVE_TAB,
-                self::RESSOURCE => ThemesFacade::getItem($this->container, $args['name'], $args['author']),
+                'item' => ThemesFacade::getItem($this->container, $args['name'], $args['author']),
             ]
         );
     }

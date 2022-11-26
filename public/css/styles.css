@@ -10,7 +10,7 @@
     --backpanel: #fff;
     --backhover: #dcdddd;
     --backtab: #a72ccd;
-    --backactivetab: #fff;
+    --backactivetab: #eacfe8;
     --backbutton: var(--backtab);
     --backbuttonhover: #8623A4;
     --primary: #0275D8;
@@ -56,6 +56,7 @@ button {
 }
 
 .content .tab {
+    margin: 0 0.75rem;
     text-align: center;
     font-weight: bold;
     transition-duration: .2s;
@@ -186,22 +187,67 @@ footer {
 }
 
 .breadcrumb .profile {
-	text-transform: none;
+    text-transform: none;
 }
 
 .menu.breadcrumb {
-	margin: 2rem 0 0;
-	padding: 0.5rem 1rem;
+    margin: 2rem 0 0;
+    padding: 0.5rem 1rem;
+}
+
+.breadcrumb li:last-of-type span {
+    padding: 0.25rem 1rem;
+    background-color: var(--backtab);
+    color: var(--backsection);
 }
 
 h3 {
-	margin: 1.5rem 0;
-	padding: 0.5rem 1rem;
+    margin: 1.5rem 0;
+    padding: 0.5rem 1rem;
 }
 
 .panel-content a.ressource {
     display: block;
     text-align: center;
+}
+
+#themes-list .zoom {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #444;
+    z-index: 999;
+}
+
+#themes-list .zoom.preview {
+    padding-top: 50vh;
+}
+
+#themes-list .preview {
+    cursor: pointer;
+}
+
+#themes-list .zoom.preview > img {
+    max-width: 96vw;
+    max-height: 96vh;
+    width: auto;
+    margin: 0 auto;
+    transform: translateY(-50%);
+}
+
+#users td:nth-of-type(4),
+#users td:nth-of-type(5),
+#users td:last-of-type {
+	text-align: center;
+}
+
+#users .contributor {
+    background-color: lightblue;
+    color: ;
+    border-radius: 0.1rem;
+    padding: 0.25rem;
 }
 
 @media screen and (max-width: 600px) {

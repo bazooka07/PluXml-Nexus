@@ -2,7 +2,7 @@
     <div class="page">
         <ul class="menu breadcrumb">
             <li><a href="<?= $routerService->urlFor('backoffice') ?>"><?= $h2 ?></a></li>
-            <li><?= $h3 ?></li>
+            <li><span><?= $h3 ?></span></li>
         </ul>
 <?php include 'flash.php'; ?>
         <form action="<?= $routerService->urlFor('profileSaveAction') ?>" method="post">

@@ -61,6 +61,7 @@ class UsersFacade
         if ($asContributor) {
             $datas['plugins'] = self::getPluginsByProfile($container, $userModel->id);
             $datas['themes'] = self::getThemesByProfile($container, $userModel->id);
+            $datas['categories'] = CategoriesFacade::getCategories($container, false, $userModel->id);
             if (isset($_SESSION['role']) and $_SESSION['role'] == 'admin')
             {
                 if (preg_match('#/backoffice/users$#', $_SERVER['HTTP_REFERER'])) {

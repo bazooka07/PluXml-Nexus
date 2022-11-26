@@ -35,5 +35,14 @@ EOT;
         }
 
         $this->themes = $this->pdoService->query(str_replace('##WHERE##', $where, self::SELECT));
+
+        # vérifier que les fichiers pour media et file existent
+        foreach($this->themes as $i=>$item) {
+            foreach(array('file', 'media') as $f) {
+                if(!file_exists(PUBLIC_DIR . $item[$f])) {
+                    $this->themes[$i][$f] = '';
+                }
+            }
+        }
     }
 }

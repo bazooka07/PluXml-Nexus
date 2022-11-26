@@ -18,9 +18,9 @@ class CategoriesFacade extends Facade
      * @param ContainerInterface $container
      * @return array
      */
-    static public function getCategories(ContainerInterface $container, bool $all=false)
+    static public function getCategories(ContainerInterface $container, bool $all=false, int $userid=null)
     {
-        $categoriesModel = new CategoriesModel($container, $all);
+        $categoriesModel = new CategoriesModel($container, $all, $userid);
         return $categoriesModel->categories;
     }
 

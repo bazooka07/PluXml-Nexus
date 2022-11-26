@@ -70,6 +70,7 @@ foreach([ 16, 32, 96, ] as $size) {
         </div>
     </main>
     <footer>PluXml - Blog ou Cms à l'Xml !</footer>
+    <script src="/js/script.js"></script>
     <script src="https://medias.pluxml.org/navigation/nav.js"></script>
 </body>
 </html>

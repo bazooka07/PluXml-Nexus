@@ -3,7 +3,7 @@
         <h2><?= $h2 ?></h2>
         <ul class="menu breadcrumb">
             <li><a href="<?= $routerService->urlFor('backoffice') ?>"><?= _['BACKOFFICE'] ?></a></li>
-            <li><?= _['NEW_' . strtoupper($ressource)] ?></li>
+            <li><span><?= _['NEW_' . strtoupper($ressource)] ?></span></li>
         </ul>
         <h3><?= $h3 ?></h3>
 <?php include 'flash.php'; ?>

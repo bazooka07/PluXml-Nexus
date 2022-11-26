@@ -47,7 +47,7 @@ class PluginsController extends Controller
             self::VIEW_ITEM,
             [
                 'activeTab' => self::ACTIVE_TAB,
-                self::RESSOURCE => PluginsFacade::getItem($this->container, $args['name'], $args['author']),
+                'item' => PluginsFacade::getItem($this->container, $args['name'], $args['author']),
             ]
         );
     }

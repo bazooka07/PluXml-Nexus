@@ -2,7 +2,7 @@
     <div class="page">
         <ul class="menu breadcrumb">
             <li><a href="<?= $routerService->urlFor('backoffice') ?>"><?= $h2 ?></a></li>
-            <li><?= _[strtoupper($ressource . 's')] ?></li>
+            <li><span><?= _[strtoupper($ressource . 's')] ?></span></li>
         </ul>
         <div class="grid">
             <div class="col med-8">

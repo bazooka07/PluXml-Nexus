@@ -2,7 +2,7 @@
     <div class="page">
 	<ul class="menu breadcrumb">
 		<li><a href="<?= $routerService->urlFor('backoffice') ?>"><?= $h2 ?></a></li>
-		<li><?= _['USERS'] ?></li>
+		<li><span><?= _['USERS'] ?></span></li>
 	</ul>
         <h3><?= $h3 ?></h3>
 <?php
@@ -11,7 +11,7 @@ include 'flash.php';
 if (!empty($profiles)):
 ?>
             <div class="scrollable-table">
-                <table>
+                <table id="users" data-user="<?= _['DEL_USER'] ?>" data-contributor="<?= _['DEL_CONTRIBUTOR'] ?>">
                     <thead>
                     <tr>
                         <th><?= _['LOGIN'] ?></th>
@@ -44,10 +44,16 @@ if(empty($profile['token']) and $cnt > 0):
                             <td>
 <?php if ($profile['role'] == 'admin') : ?>
     admin
-<?php elseif($cnt > 0) : ?>
-    user
-<?php else : ?>
-                                <a onclick="confirmModal('<?= $profile['username'] ?>', '<?= $routerService->urlFor('bormuser', ['userid' => $profile['id']]) ?>', 'user')"><i class="icon-trash"></i></a>
+<?php
+else :
+    $params = array(
+        '\'' . $profile['username'] . '\'',
+        '\'' . $routerService->urlFor('bormuser', ['userid' => $profile['id']]) . '\'',
+        !empty($profile['plugins_cnt']) ? $profile['plugins_cnt'] : 0,
+        !empty($profile['themes_cnt']) ? $profile['themes_cnt'] : 0,
+    );
+?>
+                                <a onclick="confirmUserModal(<?= implode(',', $params) ?>)"><i class="icon-trash <?= ($profile['plugins_cnt'] or $profile['themes_cnt']) ? 'contributor' : '' ?>"></i></a>
 <?php endif; ?>
                             </td>
                         </tr>
@@ -77,4 +83,3 @@ endif;
 ?>
     </div>
 </div>
-<script src="/js/confirmModal.js"></script>

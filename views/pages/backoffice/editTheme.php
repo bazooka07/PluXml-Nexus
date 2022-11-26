@@ -4,7 +4,7 @@
         <ul class="menu breadcrumb">
             <li><a href="<?= $routerService->urlFor('backoffice') ?>"><?= _['BACKOFFICE'] ?></a></li>
 	    <li><a href="<?= $routerService->urlFor('bo' . $ressource . 's') ?>"><?= _[strtoupper($ressource . 's')] ?></a></li>
-            <li><?= $item['name'] ?></li>
+            <li><span><?= $item['name'] ?></span></li>
         </ul>
         <h3><?= $h3 ?></h3>
 <?php include 'flash.php'; ?>

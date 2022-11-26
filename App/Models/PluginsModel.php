@@ -39,5 +39,14 @@ EOT;
         }
 
         $this->plugins = $this->pdoService->query(str_replace('##WHERE##', $where, self::SELECT));
+
+        # vérifier que les fichiers pour media et file existent
+        foreach($this->plugins as $i=>$item) {
+            foreach(array('file', 'media') as $f) {
+                if(!file_exists(PUBLIC_DIR . $item[$f])) {
+                    $this->plugins[$i][$f] = '';
+                }
+            }
+        }
     }
 }
