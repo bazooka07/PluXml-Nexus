@@ -64,7 +64,7 @@ class UsersFacade
             $datas['categories'] = CategoriesFacade::getCategories($container, false, $userModel->id);
             if (isset($_SESSION['role']) and $_SESSION['role'] == 'admin')
             {
-                if (preg_match('#/backoffice/users$#', $_SERVER['HTTP_REFERER'])) {
+                if (isset($_SERVER['HTTP_REFERER']) and preg_match('#/backoffice/users$#', $_SERVER['HTTP_REFERER'])) {
                     $datas['frombackoffice'] = true;
                 }
             }
