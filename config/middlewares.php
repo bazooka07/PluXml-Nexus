@@ -6,6 +6,7 @@ use App\Middlewares\FormOldValuesMiddleware;
 use App\Middlewares\CsrfTokenMiddleware;
 use App\Middlewares\RouterViewMiddleware;
 use App\Middlewares\IsLoggedMiddleware;
+use App\Handlers\HttpErrorHandler;
 
 /**
  * Middlewares
@@ -22,4 +23,11 @@ $app->add(new CsrfTokenMiddleware($container));
 $app->add('csrf');
 
 // SLIM4 ErrorMiddleware
-$app->addErrorMiddleware(DEBUG, false, false);
+$errorMiddleware = $app->addErrorMiddleware(DEBUG, false, false);
+
+if(! DEBUG) {
+    $callableResolver = $app->getCallableResolver();
+    $responseFactory = $app->getResponseFactory();
+    $errorHandler = new HttpErrorHandler($callableResolver, $responseFactory);
+    $errorMiddleware->setDefaultErrorHandler($errorHandler);
+}

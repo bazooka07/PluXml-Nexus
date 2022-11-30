@@ -124,13 +124,18 @@ class BackofficeThemesController extends BackofficeController
 
         $errors = self::ressourceValidator($request, true);
         // Validator error and the item does not exist
-        if (empty($errors) && empty(ThemesFacade::getItem($this->container, $this->post['name'], $this->post['author']))) {
-            if (ThemesFacade::saveItem($this->container, $this->post)) {
-                $this->messageService->addMessage('success', sprintf(self::MSG_SUCCESS_EDITRESSOURCE, $this->ressourceType));
-                $namedRoute = self::NAMED_ROUTE_BO;
+        if (empty($errors)) {
+            if(empty(ThemesFacade::getItem($this->container, $this->post['name'], $this->post['author']))) {
+                if (ThemesFacade::saveItem($this->container, $this->post)) {
+                    $this->messageService->addMessage('success', sprintf(self::MSG_SUCCESS_EDITRESSOURCE, $this->ressourceType));
+                    $namedRoute = self::NAMED_ROUTE_BO;
+                } else {
+                    # Delete the item in the database ?
+                    $errors['error'] = sprintf(self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType);
+                }
             } else {
-                # Delete the item in the database ?
                 $errors['error'] = sprintf(self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType);
+                $errors['name'] = 'THEME_ALREADY_EXISTS';
             }
         } else {
             $errors['error'] = sprintf(self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType);

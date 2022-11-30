@@ -28,8 +28,8 @@ if (!empty($profiles)):
                         <tr>
                             <td>
 <?php
-$cnt = $profile['plugins_cnt'] + $profile['themes_cnt'];
-if(empty($profile['token']) and $cnt > 0):
+$isContributor = !empty($profile['plugins_cnt']) or !empty($profile['themes_cnt']);
+if(empty($profile['token']) and $isContributor):
 ?>
                                 <a href="<?= $routerService->urlFor('profile', ['username' => $profile['username']]) ?>"><?= $profile['username'] ?></a>
 <?php else : ?>
@@ -46,14 +46,12 @@ if(empty($profile['token']) and $cnt > 0):
     admin
 <?php
 else :
-    $params = array(
-        '\'' . $profile['username'] . '\'',
-        '\'' . $routerService->urlFor('bormuser', ['userid' => $profile['id']]) . '\'',
-        !empty($profile['plugins_cnt']) ? $profile['plugins_cnt'] : 0,
-        !empty($profile['themes_cnt']) ? $profile['themes_cnt'] : 0,
-    );
+    $params = '\'' . $profile['username'] . '\'';
+    if($isContributor) {
+        $params .= ',' . $profile['plugins_cnt'] . ',' . $profile['themes_cnt'];
+    }
 ?>
-                                <a onclick="confirmUserModal(<?= implode(',', $params) ?>)"><i class="icon-trash <?= ($profile['plugins_cnt'] or $profile['themes_cnt']) ? 'contributor' : '' ?>"></i></a>
+                                <a href="<?= $routerService->urlFor('bormuser', $profile) ?>" onclick="return confirmUserModal(<?= $params ?>)"><i class="icon-trash <?= ($profile['plugins_cnt'] or $profile['themes_cnt']) ? 'contributor' : '' ?>"></i></a>
 <?php endif; ?>
                             </td>
                         </tr>
@@ -66,10 +64,10 @@ else :
 ?>
             <div class="grid">
                 <div class="col med-6 lrg-4">
-                    <?= $expireCount ?> <?= _['INVALIDATE_USERS'] ?>
+                    <?= sprintf(_['INVALIDATE_USERS'], $expireCount) ?>
                 </div>
                 <div class="col med-2 med-offset-4 lrg-2 lrg-offset-6">
-                    <a href="<?= $routerService->urlFor('bormusers') ?>" onclick="return confirm('drop <?= $expireCount ?> user(s)');"><button><?= _['DROP'] ?></button></a>
+                    <a href="<?= $routerService->urlFor('bormusers') ?>" onclick="return confirm('<?= sprintf(_['DROP_USERS_COUNT'], $expireCount) ?>');"><button><?= _['DROP'] ?></button></a>
                 </div>
 
             </div>

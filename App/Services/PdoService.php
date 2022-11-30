@@ -24,7 +24,7 @@ class PdoService
      * @param String $sql
      * @return Array
      */
-    public function query(String $sql)
+    public function query(String $sql): Array
     {
         $req = $this->pdo->prepare($sql);
         $status = $req->execute();
@@ -36,7 +36,7 @@ class PdoService
      * @param String $sql
      * @return Bool
      */
-    public function insert(String $sql)
+    public function insert(String $sql): Bool
     {
         $req = $this->pdo->prepare($sql);
         return $req->execute();
@@ -45,11 +45,11 @@ class PdoService
     /**
      *
      * @param String $sql
-     * @return Bool
+     * @return Integer or false
      */
     public function delete(String $sql)
     {
-        $req = $this->pdo->prepare($sql);
-        return $req->execute() !== 0;
+        $rowsCnt = $this->pdo->exec($sql); 
+        return $rowsCnt;
     }
 }

@@ -105,20 +105,6 @@ class UsersFacade
      */
     static public function searchUser(ContainerInterface $container, string $username, bool $all=false): ?UserModel
     {
-/*
-        $userModels = new UsersModel($container);
-
-        // Search userid by the username
-        $rows = array_filter($userModels->users, function($userInfos) use($username, $all) {
-            return ($userInfos['username'] === $username and ($all or empty($userInfos['token'])));
-        });
-
-        if(count($rows) !== 1) {
-            return NULL;
-        }
-
-        return new UserModel($container, array_values($rows)[0]['id']);
-*/
         $userModel = new UserModel($container, $username, '', $all);
 
         if(empty($userModel->id)) {
@@ -126,6 +112,34 @@ class UsersFacade
         }
 
         return $userModel;
+    }
+
+    /**
+     *
+     * @param ContainerInterface $container
+     * @param string $search
+     * @return Array
+     */
+    static public function searchUsersByNameOrEmail(ContainerInterface $container, String $username, String $email)
+    {
+        $query = <<< EOT
+select username, email
+    from users
+    where username='$username'
+    or email='$email';
+EOT;
+        $usersModel = new UsersModel($container, UsersFilter::Extra, $query);
+
+        $result = [];
+        foreach($usersModel->users as $user) {
+            if($user['username'] == $username) {
+                $result['username'] = true;
+            }
+            if($user['email'] == $email) {
+                $result['email'] = true;
+            }
+        }
+        return array_keys($result);
     }
 
     /**
@@ -164,23 +178,21 @@ class UsersFacade
 
     /**
      * @param ContainerInterface $container
-     * @param string $username
+     * @param string $userid
      * @return bool
      */
-    static public function removeUser(ContainerInterface $container, string $username): bool
+    static public function removeUser(ContainerInterface $container, string $userid): bool
     {
-        return $userModel->delete();
+        return UsersModel::removeUserById($container, $userid);
     }
 
     /**
      * @param ContainerInterface $container
-     * @param string $username
-     * @return bool
+     * @return integer|false
      */
-    static public function removeExpire(ContainerInterface $container): bool
+    static public function removeExpire(ContainerInterface $container)
     {
-        $usersModel = new UsersModel($container);
-        return $usersModel->deleteExpire();
+        return UsersModel::removeExpiredUsers($container);
     }
 
     /**

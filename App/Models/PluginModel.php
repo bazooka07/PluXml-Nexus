@@ -60,6 +60,6 @@ class PluginModel extends Model
                 }
             }
         }
-        return $this->pdoService->delete('DELETE FROM plugins WHERE id = '. $this->id . ';');
+        return ($this->pdoService->delete('DELETE FROM plugins WHERE id = '. $this->id . ';') == 1);
     }
 }

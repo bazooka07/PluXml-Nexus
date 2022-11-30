@@ -64,10 +64,11 @@ class BackofficeController extends Controller
     /**
      * Validate request body for a plugin save or edit
      *
+     * Parse and save the Zip archive file.
      * @param Request $request
      * @param bool $newPlugin
      * @param bool $newFile
-     * @return array
+     * @return array of errors
      * @throws Exception
      */
     protected function ressourceValidator(Request $request, bool $newRessource = false): array

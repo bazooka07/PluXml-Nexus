@@ -103,9 +103,4 @@ UPDATE users SET
 EOT;
         return $this->pdoService->insert($query);
     }
-
-    public function delete()
-    {
-        return $this->pdoService->delete("DELETE FROM users WHERE id = '$this->id'");
-    }
 }

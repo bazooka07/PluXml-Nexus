@@ -220,8 +220,16 @@ class AuthController extends Controller
         Validator::notEmpty()->equals($post['password'])->validate($post['password2']) || $errors['password2'] = _['MSG_VALID_PASSWORDCONFIRM'];
         Validator::notEmpty()->email()->validate($post['email']) || $errors['email'] = _['MSG_VALID_EMAIL'];
 
+
         if (empty($errors)) {
-            if (UsersFacade::addUser($this->container, $post) and AuthFacade::sendConfirmationEmail($this->container, $post['username'])) {
+            # Check uniques values for username and email
+            $duplicates = UsersFacade::searchUsersByNameOrEmail($this->container, $post['username'], $post['email']);
+            if(!empty($duplicates)) {
+                $this->messageService->addMessage('error', 'DUPLICATE_VALUES');
+                foreach($duplicates as $f) {
+                    $this->messageService->addMessage($f, strtoupper($f) .'_ALREADY_EXISTS');
+                }
+            } elseif (UsersFacade::addUser($this->container, $post) and AuthFacade::sendConfirmationEmail($this->container, $post['username'])) {
                 $this->messageService->addMessage('success', _['MSG_SUCCESS_SIGNUP']);
                 $namedRoute = self::NAMED_ROUTE_AUTH;
             } else {

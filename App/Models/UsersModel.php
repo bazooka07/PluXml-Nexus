@@ -61,7 +61,7 @@ EOT;
 
     public $users; # rows from SQL query
 
-    public function __construct(ContainerInterface $container, UsersFilter $filter = UsersFilter::None)
+    public function __construct(ContainerInterface $container, UsersFilter $filter = UsersFilter::None, String $query = '')
     {
         parent::__construct($container);
 
@@ -70,18 +70,34 @@ EOT;
             case UsersFilter::Contributors: $query = self::SELECT_CONTRIBUTORS; break;
             case UsersFilter::HasThemes: $query = self::SELECT_WITH_THEMES; break;
             case UsersFilter::ItemsCount: $query = self::SELECT_ITEMS_COUNT; break;
+            case UsersFilter::Extra: break; # special query
             case UsersFilter::NoUsers : break;
             default: $query = self::SELECT_ALL;
         }
-        $this->users = isset($query) ? $this->pdoService->query($query) : [];
+        $this->users = !empty($query) ? $this->pdoService->query($query) : [];
     }
 
-    public function deleteExpire()
+    public static function removeUserById(ContainerInterface $container, String $userId):bool
     {
-        return $this->pdoService->delete(self::DELETE_EXPIRE);
+        $query = <<< EOT
+DELETE FROM users
+    WHERE id=$userId
+    AND (
+        role IS NULL OR
+        role != 'admin'
+    );
+EOT;
+        $pdoService = $container->get('pdo');
+        return ($pdoService->delete($query) == 1);
     }
 
-    public function expireCount()
+    public static function removeExpiredUsers(ContainerInterface $container)
+    {
+        $pdoService = $container->get('pdo');
+        return $pdoService->delete(self::DELETE_EXPIRE);
+    }
+
+    public function expireCount():int
     {
         $rows = $this->pdoService->query(self::EXPIRE_COUNT); # retourne un tableau de 1 rangée !!!!
         return $rows ? $rows[0]['cnt'] : 0;
@@ -100,6 +116,6 @@ UPDATE users SET
     AND token = '$token'
     AND tokenexpire > now();
 EOT;
-        return $pdoService->delete($query);
+        return ($pdoService->delete($query) == 1);
     }
 }

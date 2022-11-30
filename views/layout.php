@@ -39,7 +39,7 @@ foreach([ 16, 32, 96, ] as $size) {
     <header class="header" role="banner">
         <div class="container">
             <div class="grid">
-                <div class="col sml-12 med-8">
+                <div class="col med-8">
                     <nav class="nav" role="navigation">
                         <ul class="inline-list">
                             <li><a href="<?= $routerService->urlFor('homepage') ?>"><h1><?= _['RESSOURCES'] ?></h1></a></li>
@@ -48,7 +48,7 @@ foreach([ 16, 32, 96, ] as $size) {
                     </nav>
                 </div>
 
-                <div class="col sml-12 med-4">
+                <div class="col med-4">
                     <nav class="nav text-right" role="navigation">
                         <ul class="inline-list">
 <?php if (!$isLogged): ?>

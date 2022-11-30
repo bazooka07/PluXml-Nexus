@@ -13,4 +13,5 @@ enum UsersFilter
     case HasThemes;
     case ItemsCount;
     case NoUsers;
+    case Extra;
 }

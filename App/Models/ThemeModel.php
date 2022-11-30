@@ -52,6 +52,6 @@ class ThemeModel extends Model
                 }
             }
         }
-        return $this->pdoService->delete('DELETE FROM themes WHERE id = '. $this->id . ';');
+        return ($this->pdoService->delete('DELETE FROM themes WHERE id = '. $this->id . ';') == 1);
     }
 }

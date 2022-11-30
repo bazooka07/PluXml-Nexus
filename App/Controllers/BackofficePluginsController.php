@@ -78,7 +78,7 @@ class BackofficePluginsController extends BackofficeController
             'pages/backoffice/add' . ucfirst(self::RESSOURCE) . '.php',
             [
                 'h3' => _['NEW_' . strtoupper(self::RESSOURCE)],
-        'ressource' => self::RESSOURCE,
+                'ressource' => self::RESSOURCE,
                 'categories' => CategoriesFacade::getCategories($this->container, true),
             ]
         );
@@ -128,13 +128,18 @@ class BackofficePluginsController extends BackofficeController
 
         $errors = self::ressourceValidator($request, true);
         // Validator error and the item does not exist
-        if (empty($errors) && empty(PluginsFacade::getItem($this->container, $this->post['name'], $this->post['author']))) {
-            if (PluginsFacade::saveItem($this->container, $this->post)) {
-                $this->messageService->addMessage('success', sprintf(self::MSG_SUCCESS_EDITRESSOURCE, $this->ressourceType));
-                $namedRoute = self::NAMED_ROUTE_BO;
+        if (empty($errors)) {
+            if(empty(PluginsFacade::getItem($this->container, $this->post['name'], $this->post['author']))) {
+                if (PluginsFacade::saveItem($this->container, $this->post)) {
+                    $this->messageService->addMessage('success', sprintf(self::MSG_SUCCESS_EDITRESSOURCE, $this->ressourceType));
+                    $namedRoute = self::NAMED_ROUTE_BO;
+                } else {
+                    # Delete the item in the database ?
+                    $errors['error'] = sprintf(self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType);
+                }
             } else {
-                # Delete the item in the database ?
                 $errors['error'] = sprintf(self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType);
+                $errors['name'] = 'PLUGIN_ALREADY_EXISTS';
             }
         } else {
             $errors['error'] = sprintf(self::MSG_ERROR_TECHNICAL_RESSOURCES, $this->ressourceType);

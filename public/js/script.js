@@ -1,8 +1,8 @@
-function confirmUserModal(username, request, plugins, themes) {
+function confirmUserModal(username, plugins, themes) {
     const table = document.getElementById('users')
     if(table) {
         var pattern;
-        if(plugins > 0 || themes > 0) {
+        if(plugins || themes) {
             pattern = table.dataset.contributor
                 .replace('#username#', username)
                 .replace('#plugins#', plugins)
@@ -12,11 +12,10 @@ function confirmUserModal(username, request, plugins, themes) {
             pattern = table.dataset.user
                 .replace('#username#', username);
         }
-
-        if (confirm(pattern)) {
-            fetch(request).then(response => document.location.reload(true));
-        }
+        return confirm(pattern);
     }
+
+    return false;
 }
 
 // for zooming previews of themes
