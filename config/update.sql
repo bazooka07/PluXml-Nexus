@@ -10,7 +10,7 @@ ALTER TABLE themes
 ALTER TABLE themes
     ALTER COLUMN date SET default now();
 
-ALTER TABLE themes
+ALTER TABLE plugins
     ADD COLUMN downloads INTEGER;
 
 ALTER TABLE plugins
@@ -30,6 +30,9 @@ ALTER TABLE plugins
 
 ALTER TABLE users
     ADD COLUMN lastconnected DATETIME;
+
+ALTER TABLE users
+    ADD COLUMN ipv4 INET4;
 
 ALTER TABLE users
     ADD UNIQUE KEY username_uniq (username);

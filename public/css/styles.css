@@ -237,17 +237,30 @@ h3 {
     transform: translateY(-50%);
 }
 
-#users td:nth-of-type(4),
-#users td:nth-of-type(5),
-#users td:last-of-type {
-	text-align: center;
+#users th:nth-of-type(n+3),
+#users td:nth-of-type(n+3) {
+        text-align: center;
 }
 
 #users .contributor {
     background-color: lightblue;
-    color: ;
     border-radius: 0.1rem;
     padding: 0.25rem;
+}
+
+.users.expired,
+#users .expired {
+    background-color: firebrick;
+    color: #fff
+}
+
+#users .waiting {
+    color: red;
+    font-weight: bold;
+}
+
+.users.expired {
+    padding: 0.25rem 2rem;
 }
 
 @media screen and (max-width: 600px) {

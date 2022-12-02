@@ -30,6 +30,7 @@ class AuthFacade extends Facade
             $_SESSION['user'] = $userModel->username;
             $_SESSION['userid'] = $userModel->id;
             $_SESSION['role'] = $userModel->role;
+            $_SESSION['lastconnected'] = $userModel->lastconnected;
             return TRUE;
         } catch (Exception $e) {
             return FALSE;
@@ -44,6 +45,7 @@ class AuthFacade extends Facade
         unset($_SESSION['user']);
         unset($_SESSION['userid']);
         unset($_SESSION['role']);
+        unset($_SESSION['lastconnected']);
     }
 
     /**

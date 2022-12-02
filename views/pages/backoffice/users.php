@@ -19,12 +19,16 @@ if (!empty($profiles)):
                         <th><?= _['WEBSITE'] ?></th>
                         <th><?= _['PLUGINS'] ?></th>
                         <th><?= _['THEMES'] ?></th>
-                        <th><?= _['VALIDATE_BEFORE'] ?></th>
+                        <th><?= _['LASTCONNECTED'] ?></th>
+                        <th>IP v4</td>
                         <th><?= _['ACTIONS'] ?></th>
                     </tr>
                     </thead>
                     <tbody>
-<?php foreach ($profiles as $key => $profile): ?>
+<?php
+$now = date('Y-m-d H:i:s');
+foreach ($profiles as $key => $profile):
+?>
                         <tr>
                             <td>
 <?php
@@ -37,13 +41,33 @@ if(empty($profile['token']) and $isContributor):
 <?php endif; ?>
                             </td>
                             <td><?= $profile['email'] ?></td>
-                            <td><?= $profile['website'] ?></td>
+<?php
+if(!empty($profile['website'])) {
+?>
+                            <td><a href="<?= $profile['website'] ?>" target="_blank"><?= $profile['website'] ?></a></td>
+<?php
+} else {
+?>
+                            <td>&nbsp;</td>
+<?php
+}
+?>
                             <td><?= $profile['plugins_cnt'] ?></td>
                             <td><?= $profile['themes_cnt'] ?></td>
-                            <td><?= !empty($profile['token']) ? $profile['tokenexpire']: '&nbsp;' ?></td>
-                            <td>
+<?php
+if(!empty($profile['token'])) {
+?>
+                            <td class="<?= ($profile['tokenexpire'] < $now) ? 'expired' : 'waiting' ?>"><?= reverseDate($profile['tokenexpire']) ?></td>
+<?php
+} else {
+?>
+                            <td><?= !empty($profile['lastconnected']) ? reverseDate($profile['lastconnected']) : '&nbsp;' ?></td>
+<?php
+}
+?>
+                            <td><?= !empty($profile['ipv4']) ? long2ip($profile['ipv4']) : '&nbsp;' ?></td>
 <?php if ($profile['role'] == 'admin') : ?>
-    admin
+                            <td><strong>admin</strong></td>
 <?php
 else :
     $params = '\'' . $profile['username'] . '\'';
@@ -51,9 +75,8 @@ else :
         $params .= ',' . $profile['plugins_cnt'] . ',' . $profile['themes_cnt'];
     }
 ?>
-                                <a href="<?= $routerService->urlFor('bormuser', $profile) ?>" onclick="return confirmUserModal(<?= $params ?>)"><i class="icon-trash <?= ($profile['plugins_cnt'] or $profile['themes_cnt']) ? 'contributor' : '' ?>"></i></a>
+                            <td><a href="<?= $routerService->urlFor('bormuser', $profile) ?>" onclick="return confirmUserModal(<?= $params ?>)"><i class="icon-trash <?= ($profile['plugins_cnt'] or $profile['themes_cnt']) ? 'contributor' : '' ?>"></i></a></td>
 <?php endif; ?>
-                            </td>
                         </tr>
 <?php endforeach; ?>
                     </tbody>
@@ -64,7 +87,7 @@ else :
 ?>
             <div class="grid">
                 <div class="col med-6 lrg-4">
-                    <?= sprintf(_['INVALIDATE_USERS'], $expireCount) ?>
+                    <span class="users expired"><?= sprintf(_['INVALIDATE_USERS'], $expireCount) ?></span>
                 </div>
                 <div class="col med-2 med-offset-4 lrg-2 lrg-offset-6">
                     <a href="<?= $routerService->urlFor('bormusers') ?>" onclick="return confirm('<?= sprintf(_['DROP_USERS_COUNT'], $expireCount) ?>');"><button><?= _['DROP'] ?></button></a>

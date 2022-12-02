@@ -1,7 +1,8 @@
 <div class="content">
     <div class="page">
         <h2><?= $h2 ?></h2>
-        <p><?= _['HELLO'] ?> <?= $_SESSION['user'] ?> !</p>
+        <p><?= _['HELLO'] ?> <?= ucfirst($_SESSION['user']) ?> !</p>
+        <p><?= reverseDate($_SESSION['lastconnected'], _['LAST_CONNECTION']) ?></p>
 <?php include 'flash.php'; ?>
         <div class="grid">
             <div class="col sml-12 med-3 panel text-center">

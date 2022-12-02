@@ -52,7 +52,7 @@ SELECT id,username,email,website,role,token,tokenexpire,count(b.id) as themes
 EOT;
     # https://dev.mysql.com/doc/refman/8.0/en/join.html
     const SELECT_ITEMS_COUNT    = <<< EOT
-SELECT u.id,username,email,website,role,token,tokenexpire,p.plugins_cnt,t.themes_cnt
+SELECT u.id,username,email,website,role,token,tokenexpire,lastconnected,ipv4,p.plugins_cnt,t.themes_cnt
     FROM users as u
     LEFT JOIN (SELECT author, count(*) AS plugins_cnt FROM plugins group by author) AS p ON u.id=p.author
     LEFT JOIN (SELECT author, count(*) AS themes_cnt FROM themes group by author) AS t ON u.id=t.author

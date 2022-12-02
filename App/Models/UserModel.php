@@ -15,6 +15,8 @@ class UserModel extends Model
     public $website;
     public $role;
     public $token;
+    public $lastconnected;
+    public $ipv4;
 
     public function __construct(ContainerInterface $container, String $id, String $password='', bool $validToken=false)
     {
@@ -39,22 +41,23 @@ SELECT id,username,password,email,website,role,lastconnected,token
 EOT;
         }
 
-        $pdo = $this->pdoService->query($query);
+        $rows = $this->pdoService->query($query);
 
         if (
-            count($pdo) === 1 and
-            (empty($password) or password_verify($password, $pdo[0]['password']))
+            count($rows) === 1 and
+            (empty($password) or password_verify($password, $rows[0]['password']))
         ) {
-            $this->id = $pdo[0]['id'];
-            $this->username = $pdo[0]['username'];
-            $this->email = $pdo[0]['email'];
+            $this->id = $rows[0]['id'];
+            $this->username = $rows[0]['username'];
+            $this->email = $rows[0]['email'];
             if(empty($confirmToken)) {
-                $this->website = $pdo[0]['website'];
-                $this->role = $pdo[0]['role'];
-                $this->lastconnected = $pdo[0]['lastconnected'];
+                $this->website = $rows[0]['website'];
+                $this->role = $rows[0]['role'];
+                $this->lastconnected = $rows[0]['lastconnected'];
+                $this->ipv4 = $_SERVER['REMOTE_ADDR'];
                 $this->updateLastConnected();
                 # For confirmation by e-mail
-                $this->token = $validToken ? $pdo[0]['token'] : '';
+                $this->token = $validToken ? $rows[0]['token'] : '';
             }
         } else {
             throw new \Exception(_['FAILURE_USER'] . ' : ' . (DEBUG ? $query : $id));
@@ -96,9 +99,11 @@ EOT;
 
     private function updateLastConnected()
     {
+        $ipv4Num = ip2long($this->ipv4);
         $query = <<< EOT
 UPDATE users SET
-    lastconnected = NOW()
+    lastconnected = NOW(),
+    ipv4 = $ipv4Num
     WHERE id = '$this->id';
 EOT;
         return $this->pdoService->insert($query);

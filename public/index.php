@@ -18,8 +18,8 @@ require_once '../config/settings.php';
 
 require_once '../App/Translations/fr.php';
 
-function reverseDate($input) {
-    return implode('/', array_reverse(explode('-', $input)));
+function reverseDate($input, $format='$3/$2/$1 $4h$5') {
+    return preg_replace('#^(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}).*#', $format, $input);
 }
 
 // SLIM4 application initialisation with the PHP-DI container

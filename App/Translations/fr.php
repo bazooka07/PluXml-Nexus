@@ -114,4 +114,9 @@ const  _ = array(
 	'DROP_USERS_COUNT' => 'Supprimer les inscriptions de %d utilisateurs ?',
 	'DROPPED_ONE_USER' => 'l\'utilisateur %s a été supprimé',
 	'FAILED' => 'Échec',
+	'LASTCONNECTED' => 'Dernière connection',
+	'LAST_CONNECTION' => 'Dernière connexion le $3/$2/$1 à $4h$5',
+	# 'LAST_CONNECTION' => 'Letzter Anschluss am $3.$2.$1 um $4:$5 Uhre',
+	# 'LAST_CONNECTION' => 'Última conexión el $3/$2/$1 a las $4:$5h',
+	# 'LAST_CONNECTION' => 'Last connection on $3/$2/$1 at $4:$5',
 );
