@@ -2,7 +2,9 @@
     <div class="page">
         <div class="auth">
             <h3>Sign up</h3>
-
+<?php
+if(!empty($enable)) {
+?>
             <?php if (isset($flash['success'])): ?>
                 <div class="alert green">
                     <?= $flash['success'][0] ?>
@@ -47,6 +49,13 @@
                     <input type="submit" value="Sign up">
                 </div>
             </form>
+<?php
+} else {
+?>
+            <div class="text-center alert red">Sorry, this service is temporarily disabled. Try again later !</div>
+<?php
+}
+?>
         </div>
     </div>
 </div>

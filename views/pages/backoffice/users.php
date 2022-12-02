@@ -28,32 +28,22 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <?php foreach ($profiles as $key => $profile): ?>
+<?php
+foreach ($profiles as $key => $profile):
+    $expiredClass = ($profile['tokenexpire'] != '0000-00-00 00:00:00' and $profile['tokenexpire'] < $now) ? 'expired' : '';
+    $expiredCaption = ($profile['tokenexpire'] == '0000-00-00 00:00:00') ? 'Yes' : 'No (' . $profile['tokenexpire'] . ')';
+?>
                         <tr>
-                            <td>
-                                <a href="<?= $routerService->urlFor('profile', ['username' => $profile['username']]) ?>"><?= $profile['username'] ?></a>
-                            </td>
+                            <td><a href="<?= $routerService->urlFor('profile', ['username' => $profile['username']]) ?>"><?= $profile['username'] ?></a></td>
                             <td><?= $profile['email'] ?></td>
-                            <td><?= $profile['website'] ?></td>
-                            <td>
-                                <?php if ($profile['hadPlugins']): ?>
-                                    Yes
-                                <?php else: ?>
-                                    No
-                                <?php endif; ?>
-                            </td>
-                            <td class="<?= ($profile['tokenexpire'] != '0000-00-00 00:00:00' and $profile['tokenexpire'] < $now) ? 'expired' : '' ?>">
-                                <?php if($profile['tokenexpire'] == '0000-00-00 00:00:00'): ?>
-                                    Yes
-                                <?php else: ?>
-                                    No (<?= $profile['tokenexpire'] ?>)
-                                <?php endif; ?>
-                            </td>
+                            <td><a href="<?= $profile['website'] ?>" target="_blank"><?= $profile['website'] ?></a></td>
+                            <td><?= ($profile['hadPlugins']) ? 'Yes' : 'No' ?></td>
+                            <td class="<?= $expiredClass ?>"><?= $expiredCaption ?></td>
                             <td>
                                 <a onclick="confirmModal('<?= $profile['username'] ?>', '<?= $routerService->urlFor('bormuser', ['username' => $profile['username']]) ?>')"><i class="icon-trash"></i></a>
                             </td>
                         </tr>
-                    <?php endforeach; ?>
+<?php endforeach; ?>
                     </tbody>
                 </table>
 <?php

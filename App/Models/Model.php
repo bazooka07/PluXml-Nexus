@@ -27,10 +27,9 @@ class Model
     public function generateToken()
     {
         $alphabet = "0123456789azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN";
-        $lifetime = 24; // hours
 
         $token['token'] = substr(str_shuffle(str_repeat($alphabet, self::TOKEN_LENGH)), 0, self::TOKEN_LENGH);
-        $token['expire'] = date('Y-m-d H:i:s', mktime(date('H') + $lifetime, date('i'), date('s'), date('m'), date('d'), date('Y')));
+        $token['expire'] = date('Y-m-d H:i:s', mktime(date('H') + AUTH_SIGNUP_LIFETIME, date('i'), date('s'), date('m'), date('d'), date('Y')));
 
         return $token;
     }

@@ -93,11 +93,20 @@ class AuthFacade extends Facade
         $tokenHref = $container->get('router')->urlFor('confirmEmail') . "?username=$userModel->username&token=$userModel->token";
         $placeholder = [
             '##USERNAME##' => $userModel->username,
-            '##TOKEN##' => '<p><a href="' . $host . $tokenHref . '">' . $host . $tokenHref . '</a></p>'
+            '##TOKEN##' => '<p><a href="' . $host . $tokenHref . '">' . $host . $tokenHref . '</a></p>',
+            '##LIFETIME##' => AUTH_SIGNUP_LIFETIME,
         ];
-        $body = str_replace(array_keys($placeholder), array_values($placeholder), MAIL_NEWUSER_BODY);
+        $body = strtr(MAIL_NEWUSER_BODY, $placeholder);
 
-        $result = $container->get('mail')->sendMail(MAIL_FROM, MAIL_FROM_NAME, $userModel->email, $userModel->username, MAIL_NEWUSER_SUBJECT, $body, TRUE);
+        $result = $container->get('mail')->sendMail(
+            MAIL_FROM,
+            MAIL_FROM_NAME,
+            $userModel->email,
+            $userModel->username,
+            MAIL_NEWUSER_SUBJECT,
+            $body,
+            TRUE
+        );
 
         return $result;
     }
