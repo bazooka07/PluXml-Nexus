@@ -16,7 +16,7 @@
 
         <div class="scrollable-table">
             <?php if (!empty($profiles)): ?>
-                <table>
+                <table id="users">
                     <thead>
                     <tr>
                         <th>Username</th>
@@ -42,7 +42,7 @@
                                     No
                                 <?php endif; ?>
                             </td>
-                            <td>
+                            <td class="<?= ($profile['tokenexpire'] != '0000-00-00 00:00:00' and $profile['tokenexpire'] < $now) ? 'expired' : '' ?>">
                                 <?php if($profile['tokenexpire'] == '0000-00-00 00:00:00'): ?>
                                     Yes
                                 <?php else: ?>
@@ -56,6 +56,15 @@
                     <?php endforeach; ?>
                     </tbody>
                 </table>
+<?php
+if(!empty($expired)) {
+?>
+                <div>
+                    <a href="<?= $routerService->urlFor('boexpiredusers') ?>" onclick="return confirm(this.textContent + ' ?')"><button><i class="icon-trash"></i> <span>Drop <?= $expired ?> expired users</span></button></a>
+                </div>
+<?php
+}
+?>
             <?php else: ?>
                 <p>No users found</p>
             <?php endif; ?>

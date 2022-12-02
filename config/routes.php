@@ -51,6 +51,7 @@ $app->group('/backoffice', function (RouteCollectorProxyInterface $group) {
     $group->get('/profile', BackofficeProfileController::class . ':showEditProfile')->setName('boeditprofile');
     $group->get('/users', BackofficeUsersController::class . ':showUsers')->setName('bousers');
     $group->get('/users/remove/{username}', BackofficeUsersController::class . ':removeUsers')->setName('bormuser');
+    $group->get('/users/expired', BackofficeUsersController::class . ':removeExpiredUsers')->setName('boexpiredusers');
 
     $group->post('/plugin/save', BackofficePluginsController::class . ':save')->setName('pluginSaveAction');
     $group->post('/plugin/edit/{name}', BackofficePluginsController::class . ':edit')->setName('pluginEditAction');

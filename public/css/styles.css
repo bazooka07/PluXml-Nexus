@@ -142,6 +142,11 @@ footer {
     text-align: center;
 }
 
+#users .expired {
+    background-color: firebrick;
+    color: #fff;
+}
+
 @media screen and (max-width: 600px) {
     .page {
         padding: 10px;

@@ -143,4 +143,31 @@ class UsersFacade
         $pluginsModel = new PluginsModel($container, $userid);
         return isset($pluginsModel) ? PluginsFacade::populatePluginsList($container, $pluginsModel) : null;
     }
+
+    static public function expiredUsersCnt(ContainerInterface $container): ?array
+    {
+        $query = <<< EOT
+SELECT COUNT(*) AS cnt, NOW() as datetime
+    FROM users
+    WHERE token != ''
+    AND tokenexpire < NOW();
+EOT;
+        $rows = $container->get('pdo')->query($query);
+        if(count($rows) == 1) {
+            return array_values($rows)[0];
+        }
+
+        return false;
+    }
+
+    static public function removeExpiredUsers(ContainerInterface $container): ?int
+    {
+        $query = <<< EOT
+DELETE FROM users
+    WHERE token != ''
+    AND tokenexpire < NOW();
+EOT;
+
+        return $container->get('pdo')->delete($query);
+    }
 }

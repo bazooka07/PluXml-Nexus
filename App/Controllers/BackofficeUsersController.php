@@ -23,15 +23,20 @@ class BackofficeUsersController extends Controller
      */
     public function showUsers(Request $request, Response $response): Response
     {
-        $datas = [];
         $view = self::VIEW_BO_USERS;
 
         if (AuthFacade::isAdmin($this->container, $this->currentUser)) {
-            $datas['title'] = 'Backoffice Ressources - PluXml.org';
-            $datas['h2'] = 'Backoffice';
-            $datas['h3'] = 'Users';
+            list($expired, $now) = UsersFacade::expiredUsersCnt($this->container);
+            $datas = [
+                'title' => 'Backoffice Ressources - PluXml.org',
+                'h2' => 'Backoffice',
+                'h3' => 'Users',
+                'expired' => $expired,
+                'now' => $now,
+            ];
             $datas = array_merge($datas, UsersFacade::getAllProfilesWithAndWithoutPlugins($this->container));
         } else {
+            $datas = [];
             $view = parent::VIEW_BO_USERS;
         }
 
@@ -50,5 +55,16 @@ class BackofficeUsersController extends Controller
         if (AuthFacade::isAdmin($this->container, $this->currentUser)) {
             UsersFacade::removeUser($this->container, $args['username']);
         }
+    }
+
+    public function removeExpiredUsers(Request $request, Response $response)
+    {
+        if (AuthFacade::isAdmin($this->container, $this->currentUser)) {
+            if(UsersFacade::removeExpiredUsers($this->container) > 0) {
+                $this->container->get('flash')->addMessage('success', 'Expired users are dropped !');
+            }
+        }
+
+        return $this->redirect($response, 'bousers');
     }
 }
