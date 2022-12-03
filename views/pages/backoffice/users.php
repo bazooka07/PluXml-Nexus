@@ -87,12 +87,11 @@ else :
 ?>
             <div class="grid">
                 <div class="col med-6 lrg-4">
-                    <span class="users expired"><?= sprintf(_['INVALIDATE_USERS'], $expireCount) ?></span>
+                    <span class="users expired"><?= sprintf(_['EXPIRED_USERS'], $expireCount) ?></span>
                 </div>
                 <div class="col med-2 med-offset-4 lrg-2 lrg-offset-6">
-                    <a href="<?= $routerService->urlFor('bormusers') ?>" onclick="return confirm('<?= sprintf(_['DROP_USERS_COUNT'], $expireCount) ?>');"><button><?= _['DROP'] ?></button></a>
+                    <a href="<?= $routerService->urlFor('bormusers') ?>" onclick="return confirm('<?= sprintf(_['DROP_EXPIRED_USERS'], $expireCount) ?>');"><button><?= _['DROP'] ?></button></a>
                 </div>
-
             </div>
 <?php
     endif;
