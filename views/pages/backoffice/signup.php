@@ -37,8 +37,8 @@ if(!empty($enable)) {
                            required>
                     <?php if (isset($flash['email'][0])): ?><p><?= $flash['email'][0] ?></p><?php endif; ?>
                 </div>
-                <div>
-                    <input type="submit" value="<?= _['REGISTRATION_REQUEST'] ?>">
+                <div class="text-center">
+                    <button type="submit"><?= _['REGISTRATION_REQUEST'] ?></button>
                 </div>
             </form>
 <?php
