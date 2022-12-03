@@ -120,4 +120,7 @@ const  _ = array(
 	# 'LAST_CONNECTION' => 'Letzter Anschluss am $3.$2.$1 um $4:$5 Uhre',
 	# 'LAST_CONNECTION' => 'Última conexión el $3/$2/$1 a las $4:$5h',
 	# 'LAST_CONNECTION' => 'Last connection on $3/$2/$1 at $4:$5',
+	'DISABLED_SIGNUP' => 'Ce service est momentanément indisponible.
+Merci de renouveler votre demande ultérieurement !',
+	# 'DISABLED_SIGNUP' => 'Sorry, this service is temporarily disabled. Try again later !',
 );

@@ -219,4 +219,19 @@ EOT;
         return isset($themesModel) ? ThemesFacade::populate($container, $themesModel) : null;
     }
 
+    static public function subscribersCnt(ContainerInterface $container): ?int
+    {
+        $query = <<< EOT
+SELECT COUNT(*) as cnt
+    FROM users
+    WHERE token != '';
+EOT;
+
+        $rows = $container->get('pdo')->query($query);
+        if(!empty($rows)) {
+            return array_values($rows)[0]['cnt'];
+        }
+
+        return 0;
+    }
 }

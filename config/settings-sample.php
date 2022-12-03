@@ -29,6 +29,7 @@ const MAIL_SMTP_PORT = '465';
 const MAIL_SMTP_SECURITY = 'ssl'; //possible values : 'ssl' or 'tls'
 
 const AUTH_SIGNUP_LIFETIME = 24; // hours
+const MAX_SUBSCRIBERS_CNT = 30;
 
 const MAIL_FROM = 'name@mail.com';
 const MAIL_FROM_NAME = 'MailName';

@@ -2,7 +2,11 @@
     <div class="page">
         <div class="auth">
             <h3><?= _['REGISTRATION'] ?></h3>
-<?php include 'flash.php'; ?>
+<?php
+include 'flash.php';
+
+if(!empty($enable)) {
+?>
             <form action="<?= $routerService->urlFor('signupAction') ?>" method="post">
                 <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
                 <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
@@ -37,6 +41,13 @@
                     <input type="submit" value="<?= _['REGISTRATION_REQUEST'] ?>">
                 </div>
             </form>
+<?php
+} else {
+?>
+           <div class="text-center alert red"><?= nl2br(_['DISABLED_SIGNUP']) ?></div>
+<?php
+}
+?>
         </div>
     </div>
 </div>

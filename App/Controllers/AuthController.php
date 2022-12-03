@@ -50,7 +50,8 @@ class AuthController extends Controller
         if (AuthFacade::isLogged()) {
             $response = $this->redirect($response, self::NAMED_ROUTE_BACKOFFICE);
         } else {
-            $response = $this->render($response, self::PAGE_SIGNUP);
+            $subscribersCnt = UsersFacade::subscribersCnt($this->container);
+            $response = $this->render($response, self::PAGE_SIGNUP, ['enable' => $subscribersCnt < MAX_SUBSCRIBERS_CNT]);
         }
 
         return $response;
